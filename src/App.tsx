@@ -7,7 +7,6 @@ import { mapReponseData } from "./utils/utils";
 import { fetchReposQuery } from "./assets/graphqlQueries";
 
 const fetchRepos = async (nextCursor?: string) => {
-
   const query = fetchReposQuery(nextCursor);
 
   return await fetch("https://api.github.com/graphql", {
@@ -22,8 +21,8 @@ const fetchRepos = async (nextCursor?: string) => {
       if (!res.ok) throw new Error("Error while making the request");
       return res.json();
     })
-    .then((res) => res.data)
-}
+    .then((res) => res.data);
+};
 
 function App() {
   const [repositories, setRepositories] = useState<Repo[]>([]);
@@ -35,18 +34,19 @@ function App() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  
+
   const [nextCursor, setNextCursor] = useState<string>("");
-  const [hasNextPage, setHasNextPage] = useState<boolean | undefined>(undefined);
-  const [loadPage, setLoadPage] = useState<boolean>(false)
+  const [hasNextPage, setHasNextPage] = useState<boolean | undefined>(
+    undefined
+  );
+  const [loadPage, setLoadPage] = useState<boolean>(true);
 
   useEffect(() => {
-    console.log('repositories', repositories)
-    console.log('nextCursor', nextCursor)
-    console.log('hasNextPage', hasNextPage)
-    console.log('loadPage', loadPage)
-  }, [repositories, nextCursor, hasNextPage, loadPage])
-
+    console.log("repositories", repositories);
+    console.log("nextCursor", nextCursor);
+    console.log("hasNextPage", hasNextPage);
+    console.log("loadPage", loadPage);
+  }, [repositories, nextCursor, hasNextPage, loadPage]);
 
   /**
    * Filters the repositories by name
@@ -98,38 +98,37 @@ function App() {
 
   // Fetch data
   useEffect(() => {
-    
-    setIsLoading(true);
-    setIsError(false);
+    if (loadPage) {
+      setIsLoading(true);
+      setIsError(false);
 
-    fetchRepos(nextCursor)
-      .then((res) => {
-        // console.log('res', res)
-        if (!res.user) {
-          setIsError(true);
-          // TODO: User doesn't exist
-        } else {
-          const auxRes: Repo[] = mapReponseData(
-            res.user.repositories.nodes
-          );
-          setRepositories(prevUsers => {
-            const newRepos = prevUsers.concat(auxRes)
-            originalRepositories.current = newRepos;
-            return newRepos
-          }); // -> update local state
-          setNextCursor(res.user.repositories.pageInfo.endCursor) // -> update cursor
-          setHasNextPage(res.user.repositories.pageInfo.hasNextPage) // -> update hasNextPage
+      fetchRepos(nextCursor)
+        .then((res) => {
+          // console.log('res', res)
+          if (!res.user) {
+            setIsError(true);
+            // TODO: User doesn't exist
+          } else {
+            const auxRes: Repo[] = mapReponseData(res.user.repositories.nodes);
+            setRepositories((prevUsers) => {
+              const newRepos = prevUsers.concat(auxRes);
+              originalRepositories.current = newRepos;
+              return newRepos;
+            }); // -> update local state
+            setNextCursor(res.user.repositories.pageInfo.endCursor); // -> update cursor
+            setHasNextPage(res.user.repositories.pageInfo.hasNextPage); // -> update hasNextPage
+            setIsLoading(false);
+          }
+        })
+        .catch((err) => {
+          setIsError(err);
+          console.error(err);
+        })
+        .finally(() => {
           setIsLoading(false);
-        }
-      })
-      .catch((err) => {
-        setIsError(err);
-        console.error(err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-        setLoadPage(false);
-      });
+          setLoadPage(false);
+        });
+    }
   }, [loadPage]);
 
   return (
@@ -189,7 +188,7 @@ function App() {
               <button
                 className="rounded-md py-2 px-4 bg-slate-200 hover:bg-slate-500 hover:text-white"
                 onClick={() => setLoadPage(true)}
-                // TODO -> fix double click (?)
+                // TODO -> optimize loading
               >
                 Load 10 more
               </button>
