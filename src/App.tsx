@@ -36,7 +36,10 @@ const fetchRepos = async ({
 function App() {
   // React-query hook
   const { isLoading, isError, data, hasNextPage, fetchNextPage } =
-    useInfiniteQuery(["repos"], ({ pageParam }) => fetchRepos({ pageParam }), {
+    useInfiniteQuery(
+      ["repos"],
+      ({ pageParam }) => fetchRepos({ pageParam }),
+      {
       getNextPageParam: (lastPage) => lastPage.nextCursor || undefined,
     });
 
