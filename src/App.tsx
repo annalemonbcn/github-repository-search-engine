@@ -1,12 +1,16 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Repo, RepositoriesReponseFromAPI } from "./types";
 
 import { mapReponseData } from "./utils/utils";
 import { fetchReposQuery } from "./assets/graphqlQueries";
 
-const fetchRepos = async ({ pageParam = null }: { pageParam?: string | null }) => {
+const fetchRepos = async ({
+  pageParam = null,
+}: {
+  pageParam?: string | null;
+}) => {
   const query = fetchReposQuery(pageParam);
 
   const response = await fetch("https://api.github.com/graphql", {
@@ -20,27 +24,22 @@ const fetchRepos = async ({ pageParam = null }: { pageParam?: string | null }) =
 
   if (!response.ok) throw new Error("Error while making the request");
 
-  const data = await response.json();
+  const data: RepositoriesReponseFromAPI = await response.json();
 
   return {
     repos: mapReponseData(data.data.user.repositories.nodes),
     nextCursor: data.data.user.repositories.pageInfo.endCursor,
-    hasNextPage: data.data.user.repositories.pageInfo.hasNextPage
-  }
+    hasNextPage: data.data.user.repositories.pageInfo.hasNextPage,
+  };
 };
 
 function App() {
+  const { isLoading, isError, data, hasNextPage, fetchNextPage } =
+    useInfiniteQuery(["repos"], ({ pageParam }) => fetchRepos({ pageParam }), {
+      getNextPageParam: (lastPage) => lastPage.nextCursor || undefined,
+    });
 
-  const { isLoading, isError, data, hasNextPage, fetchNextPage } = 
-    useInfiniteQuery(
-      ["repos"],
-      ({ pageParam }) => fetchRepos({ pageParam }), // --> Llama a fetchRepos con el cursor
-      {
-        getNextPageParam: (lastPage) => lastPage.nextCursor || undefined, // Usa el cursor de la última página para obtener la siguiente
-      }
-    )
-
-  const repositories: Repo[] = data?.pages?.flatMap(page => page.repos) ?? [];
+  const repositories: Repo[] = data?.pages?.flatMap((page) => page.repos) ?? [];
 
   const [sortByName, setSortByName] = useState<boolean>(false);
   const [sortByLanguage, setSortByLanguage] = useState<boolean>(false);
@@ -51,14 +50,14 @@ function App() {
    * useMemo -> to  prevent the overcalculating of that var
    */
   const filteredRepositories = useMemo(() => {
-    if(!isLoading){
+    if (!isLoading) {
       return filterByName !== null && filterByName.length > 0
         ? repositories.filter((repo) => {
             return repo.name.toLowerCase().includes(filterByName.toLowerCase());
           })
         : repositories;
     } else {
-      return repositories
+      return repositories;
     }
   }, [repositories, filterByName]);
 
@@ -67,7 +66,7 @@ function App() {
    * useMemo -> to prevent the overcalculating of that var
    */
   const sortedRepositories = useMemo(() => {
-    if(!isLoading){
+    if (!isLoading) {
       if (sortByName) {
         return filteredRepositories.toSorted((a, b) => {
           return a.name.localeCompare(b.name);
@@ -82,7 +81,7 @@ function App() {
         return filteredRepositories;
       }
     } else {
-      return repositories
+      return repositories;
     }
   }, [filteredRepositories, sortByName, sortByLanguage]);
 
@@ -158,7 +157,9 @@ function App() {
             <div className="flex justify-center my-4">
               <button
                 className="rounded-md py-2 px-4 bg-slate-200 hover:bg-slate-500 hover:text-white"
-                onClick={() => { fetchNextPage() }}
+                onClick={() => {
+                  fetchNextPage();
+                }}
               >
                 Load 10 more
               </button>
