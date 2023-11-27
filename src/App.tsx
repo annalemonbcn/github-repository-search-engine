@@ -199,7 +199,7 @@ function App() {
 
       {isLoading && <p>Loading...</p>}
       {isError && <p>Some error</p>}
-      {!isError && repositories.length === 0 && (
+      {!isLoading && !isError && repositories.length === 0 && (
         <p>This user doesn't have any public repositories yet!</p>
       )}
     </div>
