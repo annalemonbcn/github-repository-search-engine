@@ -34,13 +34,16 @@ const fetchRepos = async ({
 };
 
 function App() {
+  // React-query hook
   const { isLoading, isError, data, hasNextPage, fetchNextPage } =
     useInfiniteQuery(["repos"], ({ pageParam }) => fetchRepos({ pageParam }), {
       getNextPageParam: (lastPage) => lastPage.nextCursor || undefined,
     });
 
+  // Local data
   const repositories: Repo[] = data?.pages?.flatMap((page) => page.repos) ?? [];
 
+  // State
   const [sortByName, setSortByName] = useState<boolean>(false);
   const [sortByLanguage, setSortByLanguage] = useState<boolean>(false);
   const [filterByName, setFilterByName] = useState<string | null>(null);
@@ -50,15 +53,11 @@ function App() {
    * useMemo -> to  prevent the overcalculating of that var
    */
   const filteredRepositories = useMemo(() => {
-    if (!isLoading) {
-      return filterByName !== null && filterByName.length > 0
-        ? repositories.filter((repo) => {
-            return repo.name.toLowerCase().includes(filterByName.toLowerCase());
-          })
-        : repositories;
-    } else {
-      return repositories;
-    }
+    return !isLoading && filterByName !== null && filterByName.length > 0
+      ? repositories.filter((repo) => {
+          return repo.name.toLowerCase().includes(filterByName.toLowerCase());
+        })
+      : repositories;
   }, [repositories, filterByName]);
 
   /**
@@ -66,22 +65,18 @@ function App() {
    * useMemo -> to prevent the overcalculating of that var
    */
   const sortedRepositories = useMemo(() => {
-    if (!isLoading) {
-      if (sortByName) {
-        return filteredRepositories.toSorted((a, b) => {
-          return a.name.localeCompare(b.name);
-        });
-      } else if (sortByLanguage) {
-        return filteredRepositories.toSorted((a, b) => {
-          const aLang = a.primaryLanguage?.name;
-          const bLang = b.primaryLanguage?.name;
-          return aLang && bLang ? aLang.localeCompare(bLang) : 0;
-        });
-      } else {
-        return filteredRepositories;
-      }
+    if (!isLoading && sortByName) {
+      return filteredRepositories.toSorted((a, b) => {
+        return a.name.localeCompare(b.name);
+      });
+    } else if (!isLoading && sortByLanguage) {
+      return filteredRepositories.toSorted((a, b) => {
+        const aLang = a.primaryLanguage?.name;
+        const bLang = b.primaryLanguage?.name;
+        return aLang && bLang ? aLang.localeCompare(bLang) : 0;
+      });
     } else {
-      return repositories;
+      return filteredRepositories;
     }
   }, [filteredRepositories, sortByName, sortByLanguage]);
 
