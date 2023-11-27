@@ -1,63 +1,65 @@
-// import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { Repo } from "./types";
+import { Repo, RepositoriesReponseFromAPI } from "./types";
 
 import { mapReponseData } from "./utils/utils";
 import { fetchReposQuery } from "./assets/graphqlQueries";
 
-const fetchRepos = async (nextCursor?: string) => {
-  const query = fetchReposQuery(nextCursor);
+const fetchRepos = async ({ pageParam = null }: { pageParam?: string | null }) => {
+  const query = fetchReposQuery(pageParam);
 
-  return await fetch("https://api.github.com/graphql", {
+  const response = await fetch("https://api.github.com/graphql", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${import.meta.env.VITE_GITHUB_APIKEY}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ query }),
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error("Error while making the request");
-      return res.json();
-    })
-    .then((res) => res.data);
+  });
+
+  if (!response.ok) throw new Error("Error while making the request");
+
+  const data = await response.json();
+
+  return {
+    repos: mapReponseData(data.data.user.repositories.nodes),
+    nextCursor: data.data.user.repositories.pageInfo.endCursor,
+    hasNextPage: data.data.user.repositories.pageInfo.hasNextPage
+  }
 };
 
 function App() {
-  const [repositories, setRepositories] = useState<Repo[]>([]);
+
+  const { isLoading, isError, data, hasNextPage, fetchNextPage } = 
+    useInfiniteQuery(
+      ["repos"],
+      ({ pageParam }) => fetchRepos({ pageParam }), // --> Llama a fetchRepos con el cursor
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor || undefined, // Usa el cursor de la última página para obtener la siguiente
+      }
+    )
+
+  const repositories: Repo[] = data?.pages?.flatMap(page => page.repos) ?? [];
+
   const [sortByName, setSortByName] = useState<boolean>(false);
   const [sortByLanguage, setSortByLanguage] = useState<boolean>(false);
   const [filterByName, setFilterByName] = useState<string | null>(null);
-
-  const originalRepositories = useRef<Repo[]>([]);
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
-
-  const [nextCursor, setNextCursor] = useState<string>("");
-  const [hasNextPage, setHasNextPage] = useState<boolean | undefined>(
-    undefined
-  );
-  const [loadPage, setLoadPage] = useState<boolean>(true);
-
-  useEffect(() => {
-    console.log("repositories", repositories);
-    console.log("nextCursor", nextCursor);
-    console.log("hasNextPage", hasNextPage);
-    console.log("loadPage", loadPage);
-  }, [repositories, nextCursor, hasNextPage, loadPage]);
 
   /**
    * Filters the repositories by name
    * useMemo -> to  prevent the overcalculating of that var
    */
   const filteredRepositories = useMemo(() => {
-    return filterByName !== null && filterByName.length > 0
-      ? repositories.filter((repo) => {
-          return repo.name.toLowerCase().includes(filterByName.toLowerCase());
-        })
-      : repositories;
+    if(!isLoading){
+      return filterByName !== null && filterByName.length > 0
+        ? repositories.filter((repo) => {
+            return repo.name.toLowerCase().includes(filterByName.toLowerCase());
+          })
+        : repositories;
+    } else {
+      return repositories
+    }
   }, [repositories, filterByName]);
 
   /**
@@ -65,18 +67,22 @@ function App() {
    * useMemo -> to prevent the overcalculating of that var
    */
   const sortedRepositories = useMemo(() => {
-    if (sortByName) {
-      return filteredRepositories.toSorted((a, b) => {
-        return a.name.localeCompare(b.name);
-      });
-    } else if (sortByLanguage) {
-      return filteredRepositories.toSorted((a, b) => {
-        const aLang = a.primaryLanguage?.name;
-        const bLang = b.primaryLanguage?.name;
-        return aLang && bLang ? aLang.localeCompare(bLang) : 0;
-      });
+    if(!isLoading){
+      if (sortByName) {
+        return filteredRepositories.toSorted((a, b) => {
+          return a.name.localeCompare(b.name);
+        });
+      } else if (sortByLanguage) {
+        return filteredRepositories.toSorted((a, b) => {
+          const aLang = a.primaryLanguage?.name;
+          const bLang = b.primaryLanguage?.name;
+          return aLang && bLang ? aLang.localeCompare(bLang) : 0;
+        });
+      } else {
+        return filteredRepositories;
+      }
     } else {
-      return filteredRepositories;
+      return repositories
     }
   }, [filteredRepositories, sortByName, sortByLanguage]);
 
@@ -96,46 +102,11 @@ function App() {
     setSortByName(false);
   };
 
-  // Fetch data
-  useEffect(() => {
-    if (loadPage) {
-      setIsLoading(true);
-      setIsError(false);
-
-      fetchRepos(nextCursor)
-        .then((res) => {
-          // console.log('res', res)
-          if (!res.user) {
-            setIsError(true);
-            // TODO: User doesn't exist
-          } else {
-            const auxRes: Repo[] = mapReponseData(res.user.repositories.nodes);
-            setRepositories((prevUsers) => {
-              const newRepos = prevUsers.concat(auxRes);
-              originalRepositories.current = newRepos;
-              return newRepos;
-            }); // -> update local state
-            setNextCursor(res.user.repositories.pageInfo.endCursor); // -> update cursor
-            setHasNextPage(res.user.repositories.pageInfo.hasNextPage); // -> update hasNextPage
-            setIsLoading(false);
-          }
-        })
-        .catch((err) => {
-          setIsError(err);
-          console.error(err);
-        })
-        .finally(() => {
-          setIsLoading(false);
-          setLoadPage(false);
-        });
-    }
-  }, [loadPage]);
-
   return (
     <div className="w-3/4 mx-auto text-center">
       <h1 className="font-bold text-xl">Repositories</h1>
 
-      {sortedRepositories.length > 0 && (
+      {!isLoading && sortedRepositories.length > 0 && (
         <div className="mt-4 flex flex-col">
           <div className="buttons flex gap-2 justify-center items-center my-4">
             <button
@@ -187,8 +158,7 @@ function App() {
             <div className="flex justify-center my-4">
               <button
                 className="rounded-md py-2 px-4 bg-slate-200 hover:bg-slate-500 hover:text-white"
-                onClick={() => setLoadPage(true)}
-                // TODO -> optimize loading
+                onClick={() => { fetchNextPage() }}
               >
                 Load 10 more
               </button>

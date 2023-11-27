@@ -25,3 +25,21 @@ export type RepositoryTopics = {
   };
   url: string;
 };
+
+export type RepositoriesReponseFromAPI = {
+  data: {
+    user: {
+      repositories: {
+        nodes: Repo[],
+        pageInfo: PageInfo,
+      }
+    }
+  }
+}
+
+type pageInfo = {
+  endCursor:       string;
+  hasNextPage:     boolean;
+  startCursor:     string;
+  hasPreviousPage: boolean;
+}

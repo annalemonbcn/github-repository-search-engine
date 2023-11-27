@@ -1,4 +1,4 @@
-export const fetchReposQuery = (nextCursor?: string) => `
+export const fetchReposQuery = (nextCursor?: string | null) => `
 {
   user(login: "annalemonbcn") {
     repositories(

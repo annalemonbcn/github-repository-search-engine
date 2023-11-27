@@ -6,12 +6,10 @@ import "./index.css";
 // Tanstack
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
-const queryClient = new  QueryClient()
+const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
-    {/* <React.StrictMode> */}
-      <App />
-    {/* </React.StrictMode> */}
+    <App />
   </QueryClientProvider>
 );
