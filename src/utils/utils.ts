@@ -6,7 +6,7 @@ export const mapReponseData = (data: Repo[]) => {
       return {
         ... repo,
         primaryLanguage: {
-          name: "Unknown"
+          name: "Readme"
         }
       }
     }
