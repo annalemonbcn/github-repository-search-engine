@@ -76,20 +76,20 @@ const DataResultsContainer = () => {
 
 
   const dataResultsViewProps = {
-    repos: sortedRepositories,
+    sortedRepositories,
     sortByName,
     toggleSortByName,
     sortByLanguage,
     toggleSortByLanguage,
     setFilterByName,
+    isError,
     hasNextPage,
-    // fetchNextPage,
+    fetchNextPage,
   }
 
   return (
     <div className="w-5/6 mx-auto">
-      <DataResultsView {...dataResultsViewProps}
-      />
+      <DataResultsView {...dataResultsViewProps} />
     </div>
   );
 };

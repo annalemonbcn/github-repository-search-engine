@@ -23,8 +23,6 @@ const RepoView = ({ repo }: RepoViewProps) => {
     updatedAt,
   } = repo;
 
-  console.log('repositoryTopics', repositoryTopics.nodes)
-
   // Format date
   const formattedUpdated_at = formatDate(updatedAt);
 

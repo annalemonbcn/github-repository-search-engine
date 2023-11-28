@@ -1,33 +1,40 @@
 // Types
-import { Repo } from "../../types";
+import { Repo, FetchReposResult } from "../../types";
 
 // Components
 import RepoView from "./RepoView";
 import FiltersContainer from "../containers/FiltersContainer";
+import Paginator from "../../utils/Paginator";
 
 
 interface DataResultsViewProps {
-  repos: Repo[];
+  sortedRepositories: Repo[];
   sortByName: boolean;
   toggleSortByName: () => void;
   sortByLanguage: boolean;
   toggleSortByLanguage: () => void;
   setFilterByName: React.Dispatch<React.SetStateAction<string | null>>;
+  isError: boolean;
   hasNextPage: boolean | undefined;
-  // fetchNextPage
+  fetchNextPage: (options?: {
+    pageParam?: string | null | undefined 
+  }) => Promise<FetchReposResult>
 }
 
 const DataResultsView = (props: DataResultsViewProps) => {
 
   const { 
-    repos,
+    sortedRepositories,
     sortByName,
     toggleSortByName,
     sortByLanguage,
     toggleSortByLanguage,
-    setFilterByName
+    setFilterByName,
+    hasNextPage,
+    fetchNextPage
   } = props
 
+  
   const filtersContainerProps = {
     toggleSortByName,
     sortByName,
@@ -45,18 +52,20 @@ const DataResultsView = (props: DataResultsViewProps) => {
         </div>
         <div className="md:w-2/3 flex flex-col gap-4">
           <h2 className="text-xl font-semibold">
-            // TODO
+            {/* TODO */}
             {/* Search results for user {searchContext?.query} */}
             Search results for user
           </h2>
+          {/* Filters */}
           <FiltersContainer {...filtersContainerProps} />
+          {/* Repositories list */}
           <div className="flex flex-col gap-4">
-            {repos.length > 0 && (
-              repos.map((repo, index) => <RepoView repo={repo} key={index} />)
+            {sortedRepositories.length > 0 && (
+              sortedRepositories.map((repo, index) => <RepoView repo={repo} key={index} />)
             )}
           </div>
-          {/* <Paginator /> */}
-          <p>Paginator</p>
+          {/* Pagination */}
+          <Paginator hasNextPage={hasNextPage} fetchNextPage={fetchNextPage} />
         </div>
       </div>
     </div>
