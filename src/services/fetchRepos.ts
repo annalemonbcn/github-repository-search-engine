@@ -1,11 +1,8 @@
 // Types
-import { RepositoriesReponseFromAPI } from "../types";
+import { RepositoriesReponseFromAPI, Repo } from "../types";
 
 // Query
 import { fetchReposQuery } from "../assets/graphqlQueries";
-
-// Utils
-import { mapReponseData } from "../utils/utils";
 
 
 const fetchRepos = async ({
@@ -29,10 +26,24 @@ const fetchRepos = async ({
   const data: RepositoriesReponseFromAPI = await response.json();
 
   return {
-    repos: mapReponseData(data.data.user.repositories.nodes),
+    repos: mapResponseData(data.data.user.repositories.nodes),
     nextCursor: data.data.user.repositories.pageInfo.endCursor,
     hasNextPage: data.data.user.repositories.pageInfo.hasNextPage,
   };
 };
 
 export default fetchRepos
+
+const mapResponseData = (data: Repo[]) => {
+  return data.map((repo) => {
+    if(!repo.primaryLanguage?.name){
+      return {
+        ... repo,
+        primaryLanguage: {
+          name: "Readme"
+        }
+      }
+    }
+    return repo
+  })
+}

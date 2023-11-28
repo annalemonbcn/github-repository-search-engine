@@ -1,6 +1,6 @@
 export const fetchReposQuery = (nextCursor?: string | null) => `
 {
-  user(login: "annalemonbcn") {
+  user(login: "midudev") {
     repositories(
       first: 10,
       after: ${nextCursor ? `"${nextCursor}"` : null},      
