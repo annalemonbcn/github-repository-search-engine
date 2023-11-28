@@ -74,7 +74,6 @@ const DataResultsContainer = () => {
     setSortByName(false);
   };
 
-
   const dataResultsViewProps = {
     sortedRepositories,
     sortByName,
@@ -85,12 +84,29 @@ const DataResultsContainer = () => {
     isError,
     hasNextPage,
     fetchNextPage,
-  }
+  };
 
+  // TODO: refactor return
   return (
-    <div className="w-5/6 mx-auto">
-      <DataResultsView {...dataResultsViewProps} />
-    </div>
+    <>
+      {/* If loading */}
+      {isLoading && <p>Loading...</p>}
+
+      {/* If user has > 0 repos */}
+      {!isLoading && sortedRepositories.length > 0 && (
+        <div className="w-5/6 mx-auto">
+          <DataResultsView {...dataResultsViewProps} />
+        </div>
+      )}
+
+      {/* If is error */}
+      {isError && <p>Some error</p>}
+      
+      {/* If user has no repos */}
+      {!isLoading && !isError && repositories.length === 0 && (
+          <p>This user doesn't have any public repositories yet!</p>
+      )}
+    </>
   );
 };
 

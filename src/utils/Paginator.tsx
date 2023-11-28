@@ -14,8 +14,6 @@ interface PaginatorProps {
 
 const Paginator = ({ hasNextPage, fetchNextPage }: PaginatorProps) => {
 
-  console.log('hasNextPage', hasNextPage)
-
   return (
     <>
       {hasNextPage && (
