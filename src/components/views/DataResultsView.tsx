@@ -6,7 +6,6 @@ import RepoView from "./RepoView";
 import FiltersContainer from "../containers/FiltersContainer";
 import Paginator from "../../utils/Paginator";
 
-
 interface DataResultsViewProps {
   sortedRepositories: Repo[];
   sortByName: boolean;
@@ -17,13 +16,12 @@ interface DataResultsViewProps {
   isError: boolean;
   hasNextPage: boolean | undefined;
   fetchNextPage: (options?: {
-    pageParam?: string | null | undefined 
-  }) => Promise<FetchReposResult>
+    pageParam?: string | null | undefined;
+  }) => Promise<FetchReposResult>;
 }
 
 const DataResultsView = (props: DataResultsViewProps) => {
-
-  const { 
+  const {
     sortedRepositories,
     sortByName,
     toggleSortByName,
@@ -31,17 +29,16 @@ const DataResultsView = (props: DataResultsViewProps) => {
     toggleSortByLanguage,
     setFilterByName,
     hasNextPage,
-    fetchNextPage
-  } = props
+    fetchNextPage,
+  } = props;
 
-  
   const filtersContainerProps = {
     toggleSortByName,
     sortByName,
     toggleSortByLanguage,
     sortByLanguage,
-    setFilterByName
-  }
+    setFilterByName,
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -60,9 +57,10 @@ const DataResultsView = (props: DataResultsViewProps) => {
           <FiltersContainer {...filtersContainerProps} />
           {/* Repositories list */}
           <div className="flex flex-col gap-4">
-            {sortedRepositories.length > 0 && (
-              sortedRepositories.map((repo, index) => <RepoView repo={repo} key={index} />)
-            )}
+            {sortedRepositories.length > 0 &&
+              sortedRepositories.map((repo, index) => (
+                <RepoView repo={repo} key={index} />
+              ))}
           </div>
           {/* Pagination */}
           <Paginator hasNextPage={hasNextPage} fetchNextPage={fetchNextPage} />
