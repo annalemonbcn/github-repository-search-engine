@@ -43,3 +43,9 @@ type pageInfo = {
   startCursor:     string;
   hasPreviousPage: boolean;
 }
+
+export type FetchReposResult = {
+  repos: Repo[],
+  hasNextPage: boolean,
+  nextCursor: string
+}
