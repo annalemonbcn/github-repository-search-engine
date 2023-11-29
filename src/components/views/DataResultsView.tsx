@@ -1,3 +1,5 @@
+import React from "react";
+
 // Types
 import { Repo, FetchReposResult } from "../../types";
 
@@ -9,9 +11,12 @@ import Paginator from "../../utils/Paginator";
 
 interface DataResultsViewProps {
   sortedRepositories: Repo[];
+  languagesList: string[];
   sortByName: boolean;
   toggleSortByName: () => void;
   setFilterByName: React.Dispatch<React.SetStateAction<string | null>>;
+  filterByLanguage: string | undefined;
+  setFilterByLanguage: React.Dispatch<React.SetStateAction<string | null>>;
   isError: boolean;
   hasNextPage: boolean | undefined;
   fetchNextPage: (options?: {
@@ -22,17 +27,23 @@ interface DataResultsViewProps {
 const DataResultsView = (props: DataResultsViewProps) => {
   const {
     sortedRepositories,
+    languagesList,
     sortByName,
     toggleSortByName,
     setFilterByName,
+    filterByLanguage,
+    setFilterByLanguage,
     hasNextPage,
     fetchNextPage,
   } = props;
 
   const filtersContainerProps = {
-    toggleSortByName,
+    languagesList,
     sortByName,
+    toggleSortByName,
+    filterByLanguage,
     setFilterByName,
+    setFilterByLanguage
   };
 
   return (

@@ -1,4 +1,7 @@
-export function formatDate(inputDate: string) {
+// Types
+import { Repo } from "../types";
+
+export const formatDate = (inputDate: string) => {
   const months = [
     "January",
     "February",
@@ -19,4 +22,19 @@ export function formatDate(inputDate: string) {
   const year = date.getFullYear();
 
   return `${month} ${day} ${year}`;
+}
+
+export const getLanguagesFromRepositoriesArray = (repositories: Repo[]) => {
+  const languages: string[] = [];
+
+  repositories.forEach((repo) => {
+    if (repo.primaryLanguage && repo.primaryLanguage.name) {
+      const languageExists = languages.find((language) => language === repo.primaryLanguage?.name)
+      if(!languageExists){
+        languages.push(repo.primaryLanguage.name)
+      }
+    }
+  })
+
+  return languages;
 }

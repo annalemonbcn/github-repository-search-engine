@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Hooks
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -9,6 +9,7 @@ import { Repo } from "../../types";
 
 // Utils
 import fetchRepos from "../../api/services/fetchRepos";
+import { getLanguagesFromRepositoriesArray } from '../../utils/utils';
 
 // Components
 import DataResultsView from "../views/DataResultsView";
@@ -21,12 +22,14 @@ const DataResultsContainer = () => {
     });
 
   // Local data
-  const repositories: Repo[] = data?.pages?.flatMap((page) => page.repos) ?? [];
+  const repositories: Repo[] = data?.pages?.flatMap((page) => page.repos) ?? [];  
+  const languagesList = ["All", ...getLanguagesFromRepositoriesArray(repositories)]
 
   // State
   const [sortByName, setSortByName] = useState<boolean>(false);
   const [filterByName, setFilterByName] = useState<string | null>(null);
   const [filterByLanguage, setFilterByLanguage] = useState<string | null>(null)
+  
 
   /**
    * Filters the repositories by name
@@ -41,16 +44,16 @@ const DataResultsContainer = () => {
         })
       }
       // Filter by language
-      if (filterByLanguage && filterByLanguage.length > 0) {
-        return repositories.filter((repo) => {
-          return repo.name.includes(filterByLanguage);
-        });
-      }
+      // if (filterByLanguage && filterByLanguage.length > 0) {
+      //   return repositories.filter((repo) => {
+      //     return repo.name.includes(filterByLanguage);
+      //   });
+      // }
     } 
     
     return repositories
     
-  }, [repositories, filterByName, filterByLanguage]);
+  }, [repositories, filterByName]);
 
   /**
    * Orders the repositories by name or by language
@@ -73,9 +76,12 @@ const DataResultsContainer = () => {
 
   const dataResultsViewProps = {
     sortedRepositories,
+    languagesList,
     sortByName,
     toggleSortByName,
     setFilterByName,
+    filterByLanguage,
+    setFilterByLanguage,
     isError,
     hasNextPage,
     fetchNextPage,
