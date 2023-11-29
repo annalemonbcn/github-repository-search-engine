@@ -5,14 +5,31 @@ import ButtonGray from "../../utils/buttons/ButtonGray";
 import Dropwdown from "../../utils/Dropwdown";
 import ArrowDownIcon from "../../utils/svg/ArrowDownIcon";
 
+import { Tooltip } from "@nextui-org/tooltip";
+
 const ArrowsIcon = () => {
+  // TODO: check
   return (
-    <div className="flex flex-col ">
-      <div className="rotate-180 -mb-2.5">
-        <ArrowDownIcon />
+    <Tooltip
+      showArrow={true}
+      placement="top"
+      content="Order from A-Z"
+      classNames={{
+        base: [
+          "bg-white border border-black",
+          "before:bg-slate-400"
+        ]
+      }}
+    >
+      <div className="flex flex-col">
+        <div className="rotate-180 -mb-2.5">
+          <ArrowDownIcon />
+        </div>
+        <div>
+          <ArrowDownIcon />
+        </div>
       </div>
-      <div><ArrowDownIcon /></div>
-    </div>
+    </Tooltip>
   );
 };
 
