@@ -1,5 +1,5 @@
 // Types
-import { Repo } from "../types";
+import { Repo } from "../../types";
 
 export const formatDate = (inputDate: string) => {
   const months = [

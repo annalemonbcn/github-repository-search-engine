@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { User } from "../../types";
 
 // Fetching
-import fetchUser from "../../api/services/fetchuser";
+import fetchUser from "../../api/services/fetchUser";
 
 // Components
 import UserView from "../views/UserView";

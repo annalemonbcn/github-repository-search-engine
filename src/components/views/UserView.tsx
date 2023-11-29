@@ -2,7 +2,7 @@
 import { User } from "../../types"
 
 // Date formatter
-import { formatDate } from "../../utils/utils"
+import { formatDate } from "../../utils/func/utils"
 
 // Icons
 import GitHubIcon from "../../utils/svg/GitHubIcon"
@@ -23,7 +23,7 @@ const UserView = ({ user }: UserViewProps) => {
 
   return (
     // TODO: hover en textos y enlaces
-    <div className="flex flex-col gap-4 py-8 px-5 rounded-md bg-custom-lightGray sticky top-0">
+    <div className="flex flex-col gap-4 py-8 px-5 rounded-md bg-custom-lightGray sticky top-10">
       <img
         src={user?.avatarUrl}
         alt={` avatar for ${user?.login}`}

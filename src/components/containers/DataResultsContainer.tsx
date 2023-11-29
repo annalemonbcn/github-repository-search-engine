@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 // Hooks
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -9,7 +9,7 @@ import { Repo } from "../../types";
 
 // Utils
 import fetchRepos from "../../api/services/fetchRepos";
-import { getLanguagesFromRepositoriesArray } from "../../utils/utils";
+import { getLanguagesFromRepositoriesArray } from "../../utils/func/utils";
 
 // Components
 import DataResultsView from "../views/DataResultsView";
@@ -32,8 +32,6 @@ const DataResultsContainer = () => {
   const [sortByName, setSortByName] = useState<boolean>(false);
   const [filterByName, setFilterByName] = useState<string | null>(null);
   const [filterByLanguage, setFilterByLanguage] = useState<string | null>(null);
-
-  console.log("filterByLanguage", filterByLanguage);
 
   /**
    * Filters the repositories by name or language
