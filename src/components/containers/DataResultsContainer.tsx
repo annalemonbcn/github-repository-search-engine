@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 
 // Hooks
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -9,7 +9,7 @@ import { Repo } from "../../types";
 
 // Utils
 import fetchRepos from "../../api/services/fetchRepos";
-import { getLanguagesFromRepositoriesArray } from '../../utils/utils';
+import { getLanguagesFromRepositoriesArray } from "../../utils/utils";
 
 // Components
 import DataResultsView from "../views/DataResultsView";
@@ -22,38 +22,44 @@ const DataResultsContainer = () => {
     });
 
   // Local data
-  const repositories: Repo[] = data?.pages?.flatMap((page) => page.repos) ?? [];  
-  const languagesList = ["All", ...getLanguagesFromRepositoriesArray(repositories)]
+  const repositories: Repo[] = data?.pages?.flatMap((page) => page.repos) ?? [];
+  const languagesList = [
+    "All",
+    ...getLanguagesFromRepositoriesArray(repositories),
+  ];
 
   // State
   const [sortByName, setSortByName] = useState<boolean>(false);
   const [filterByName, setFilterByName] = useState<string | null>(null);
-  const [filterByLanguage, setFilterByLanguage] = useState<string | null>(null)
-  
+  const [filterByLanguage, setFilterByLanguage] = useState<string | null>(null);
+
+  console.log("filterByLanguage", filterByLanguage);
 
   /**
-   * Filters the repositories by name
+   * Filters the repositories by name or language
    * useMemo -> to  prevent the overcalculating of that var
    */
   const filteredRepositories = useMemo(() => {
-    if(!isLoading){
+    if (!isLoading) {
       //Filter by name
-      if(filterByName !== null && filterByName.length > 0){
+      if (filterByName !== null && filterByName.length > 0) {
         return repositories.filter((repo) => {
-          return repo.name.toLowerCase().includes(filterByName.toLowerCase())
-        })
+          return repo.name.toLowerCase().includes(filterByName.toLowerCase());
+        });
       }
       // Filter by language
-      // if (filterByLanguage && filterByLanguage.length > 0) {
-      //   return repositories.filter((repo) => {
-      //     return repo.name.includes(filterByLanguage);
-      //   });
-      // }
-    } 
-    
-    return repositories
-    
-  }, [repositories, filterByName]);
+      if (filterByLanguage !== null && filterByLanguage.length > 0) {
+        if (filterByLanguage === "All") {
+          return repositories;
+        } else {
+          return repositories.filter((repo) => {
+            return repo.primaryLanguage?.name.includes(filterByLanguage);
+          });
+        }
+      }
+    }
+    return repositories;
+  }, [repositories, filterByName, filterByLanguage]);
 
   /**
    * Orders the repositories by name or by language

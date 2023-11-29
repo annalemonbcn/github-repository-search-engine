@@ -15,10 +15,8 @@ const Dropwdown = ({
   filterByLanguage,
   setFilterByLanguage,
 }: DropdownProps) => {
-  console.log("filterByLanguage", filterByLanguage);
 
   const [isDropdownOpen, setIsDropwdownOpen] = useState(false);
-  // const [selectedLanguage, setSelectedLanguage] = useState<string>("All")
 
   const toggleDropdown = () => {
     setIsDropwdownOpen((isOpen) => !isOpen);

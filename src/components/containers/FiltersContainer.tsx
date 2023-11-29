@@ -3,10 +3,21 @@ import React from "react";
 // Button
 import ButtonGray from "../../utils/buttons/ButtonGray";
 import Dropwdown from "../../utils/Dropwdown";
+import ArrowDownIcon from "../../utils/svg/ArrowDownIcon";
+
+const ArrowsIcon = () => {
+  return (
+    <div className="flex flex-col ">
+      <div className="rotate-180 -mb-2.5">
+        <ArrowDownIcon />
+      </div>
+      <div><ArrowDownIcon /></div>
+    </div>
+  );
+};
 
 interface FiltersContainerProps {
   languagesList: string[];
-  sortByName: boolean;
   toggleSortByName: () => void;
   setFilterByName: React.Dispatch<React.SetStateAction<string | null>>;
   filterByLanguage: string | undefined;
@@ -16,7 +27,6 @@ interface FiltersContainerProps {
 const FiltersContainer = (props: FiltersContainerProps) => {
   const {
     languagesList,
-    sortByName,
     toggleSortByName,
     setFilterByName,
     filterByLanguage,
@@ -33,9 +43,7 @@ const FiltersContainer = (props: FiltersContainerProps) => {
     <div className="flex flex-col md:flex-row items-center justify-between filtersContainer">
       <div className="flex items-center gap-2 w-1/2">
         <div onClick={toggleSortByName}>
-          <ButtonGray
-            text={sortByName ? "No order by name" : "Order by name"}
-          />
+          <ButtonGray text="Name" icon={<ArrowsIcon />} />
         </div>
         <input
           type="text"

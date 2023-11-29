@@ -36,5 +36,5 @@ export const getLanguagesFromRepositoriesArray = (repositories: Repo[]) => {
     }
   })
 
-  return languages;
+  return languages.sort();
 }
