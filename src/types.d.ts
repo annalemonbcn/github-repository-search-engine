@@ -1,10 +1,10 @@
 declare global {
   interface Array<T> {
-    toSorted(compareFn?: (a: T, b: T) => number): T[]
+    toSorted(compareFn?: (a: T, b: T) => number): T[];
   }
 }
 
-/** 
+/**
  * * REPOSITORIES TYPES
  */
 export type Repo = {
@@ -33,25 +33,36 @@ export type RepositoriesReponseFromAPI = {
   data: {
     user: {
       repositories: {
-        nodes: Repo[],
-        pageInfo: PageInfo,
-      }
-    }
-  }
-}
+        nodes: Repo[];
+        pageInfo: PageInfo;
+      };
+    };
+  };
+  errors?: [
+    {
+      message: string;
+      locations: [
+        {
+          line: number;
+          column: number;
+        },
+      ];
+    },
+  ];
+};
 
 type pageInfo = {
-  endCursor:       string;
-  hasNextPage:     boolean;
-  startCursor:     string;
+  endCursor: string;
+  hasNextPage: boolean;
+  startCursor: string;
   hasPreviousPage: boolean;
-}
+};
 
 export type FetchReposResult = {
-  repos: Repo[],
-  hasNextPage: boolean,
-  nextCursor: string
-}
+  repos: Repo[];
+  hasNextPage: boolean;
+  nextCursor: string;
+};
 
 /**
  * * USER TYPES
@@ -73,7 +84,7 @@ export type User = {
   };
   twitterUsername: string | null;
   createdAt: string;
-}
+};
 
 export type UserResponseDataFromAPI = {
   data: {
@@ -88,6 +99,6 @@ export type UserResponseDataFromAPI = {
         column: number;
       };
       message: string;
-    }
+    },
   ];
 };

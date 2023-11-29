@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 import { Repo } from "../../types";
 
 // Utils
-import fetchRepos from "../../services/fetchRepos";
+import fetchRepos from "../../api/services/fetchRepos";
 
 // Components
 import DataResultsView from "../views/DataResultsView";

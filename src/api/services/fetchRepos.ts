@@ -24,9 +24,8 @@ const fetchRepos = async ({
     },
     body: JSON.stringify({ query }),
   });
-
   if (!response.ok) throw new Error("Error while making the request");
-
+  
   const data: RepositoriesReponseFromAPI = await response.json();
 
   return {
