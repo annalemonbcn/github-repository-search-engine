@@ -11,8 +11,6 @@ interface DataResultsViewProps {
   sortedRepositories: Repo[];
   sortByName: boolean;
   toggleSortByName: () => void;
-  sortByLanguage: boolean;
-  toggleSortByLanguage: () => void;
   setFilterByName: React.Dispatch<React.SetStateAction<string | null>>;
   isError: boolean;
   hasNextPage: boolean | undefined;
@@ -26,8 +24,6 @@ const DataResultsView = (props: DataResultsViewProps) => {
     sortedRepositories,
     sortByName,
     toggleSortByName,
-    sortByLanguage,
-    toggleSortByLanguage,
     setFilterByName,
     hasNextPage,
     fetchNextPage,
@@ -36,8 +32,6 @@ const DataResultsView = (props: DataResultsViewProps) => {
   const filtersContainerProps = {
     toggleSortByName,
     sortByName,
-    toggleSortByLanguage,
-    sortByLanguage,
     setFilterByName,
   };
 

@@ -1,3 +1,5 @@
+import React from 'react';
+
 // Hooks
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -23,63 +25,56 @@ const DataResultsContainer = () => {
 
   // State
   const [sortByName, setSortByName] = useState<boolean>(false);
-  const [sortByLanguage, setSortByLanguage] = useState<boolean>(false);
   const [filterByName, setFilterByName] = useState<string | null>(null);
+  const [filterByLanguage, setFilterByLanguage] = useState<string | null>(null)
 
   /**
    * Filters the repositories by name
    * useMemo -> to  prevent the overcalculating of that var
    */
   const filteredRepositories = useMemo(() => {
-    return !isLoading && filterByName !== null && filterByName.length > 0
-      ? repositories.filter((repo) => {
-          return repo.name.toLowerCase().includes(filterByName.toLowerCase());
+    if(!isLoading){
+      //Filter by name
+      if(filterByName !== null && filterByName.length > 0){
+        return repositories.filter((repo) => {
+          return repo.name.toLowerCase().includes(filterByName.toLowerCase())
         })
-      : repositories;
-  }, [repositories, filterByName]);
+      }
+      // Filter by language
+      if (filterByLanguage && filterByLanguage.length > 0) {
+        return repositories.filter((repo) => {
+          return repo.name.includes(filterByLanguage);
+        });
+      }
+    } 
+    
+    return repositories
+    
+  }, [repositories, filterByName, filterByLanguage]);
 
   /**
    * Orders the repositories by name or by language
    * useMemo -> to prevent the overcalculating of that var
    */
   const sortedRepositories = useMemo(() => {
-    if (!isLoading && sortByName) {
-      return filteredRepositories.toSorted((a, b) => {
-        return a.name.localeCompare(b.name);
-      });
-    } else if (!isLoading && sortByLanguage) {
-      return filteredRepositories.toSorted((a, b) => {
-        const aLang = a.primaryLanguage?.name;
-        const bLang = b.primaryLanguage?.name;
-        return aLang && bLang ? aLang.localeCompare(bLang) : 0;
-      });
-    } else {
-      return filteredRepositories;
-    }
-  }, [filteredRepositories, sortByName, sortByLanguage]);
+    return !isLoading && sortByName
+      ? filteredRepositories.toSorted((a, b) => {
+          return a.name.localeCompare(b.name);
+        })
+      : filteredRepositories;
+  }, [filteredRepositories, sortByName]);
 
   /**
    * Toggles the sortByName value on state
    */
   const toggleSortByName = () => {
     setSortByName((prevState) => !prevState);
-    setSortByLanguage(false);
-  };
-
-  /**
-   * Toggles the sortByLanguage value on state
-   */
-  const toggleSortByLanguage = () => {
-    setSortByLanguage((prevState) => !prevState);
-    setSortByName(false);
   };
 
   const dataResultsViewProps = {
     sortedRepositories,
     sortByName,
     toggleSortByName,
-    sortByLanguage,
-    toggleSortByLanguage,
     setFilterByName,
     isError,
     hasNextPage,
@@ -101,10 +96,10 @@ const DataResultsContainer = () => {
 
       {/* If is error */}
       {isError && <p>Some error</p>}
-      
+
       {/* If user has no repos */}
       {!isLoading && !isError && repositories.length === 0 && (
-          <p>This user doesn't have any public repositories yet!</p>
+        <p>This user doesn't have any public repositories yet!</p>
       )}
     </>
   );
