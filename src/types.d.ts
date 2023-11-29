@@ -4,6 +4,9 @@ declare global {
   }
 }
 
+/** 
+ * * REPOSITORIES TYPES
+ */
 export type Repo = {
   name: string;
   description: null | string;
@@ -49,3 +52,42 @@ export type FetchReposResult = {
   hasNextPage: boolean,
   nextCursor: string
 }
+
+/**
+ * * USER TYPES
+ */
+export type User = {
+  avatarUrl: string;
+  login: string;
+  url: string;
+  bio: string;
+  followers: {
+    totalCount: number;
+  };
+  following: {
+    totalCount: number;
+  };
+  email: string;
+  public_repositories: {
+    totalCount: number;
+  };
+  twitterUsername: string | null;
+  createdAt: string;
+}
+
+export type UserResponseDataFromAPI = {
+  data: {
+    user: User;
+  };
+  errors?: [
+    {
+      type: string;
+      path: string[];
+      locations: {
+        line: number;
+        column: number;
+      };
+      message: string;
+    }
+  ];
+};

@@ -2,6 +2,7 @@
 import { Repo, FetchReposResult } from "../../types";
 
 // Components
+import UserContainer from "../containers/UserContainer";
 import RepoView from "./RepoView";
 import FiltersContainer from "../containers/FiltersContainer";
 import Paginator from "../../utils/Paginator";
@@ -44,8 +45,7 @@ const DataResultsView = (props: DataResultsViewProps) => {
     <div className="flex flex-col gap-4">
       <div className="flex flex-col md:flex-row gap-8">
         <div className="md:w-1/3">
-          {/* <UserContainer /> */}
-          <p>User container</p>
+          <UserContainer />
         </div>
         <div className="md:w-2/3 flex flex-col gap-4">
           <h2 className="text-xl font-semibold">
