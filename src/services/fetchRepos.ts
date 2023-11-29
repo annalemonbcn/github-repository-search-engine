@@ -2,7 +2,7 @@
 import { RepositoriesReponseFromAPI, Repo } from "../types";
 
 // Query
-import { fetchReposQuery } from "../assets/graphqlQueries";
+import { fetchReposQuery } from "../queries/graphqlQueries";
 
 
 const fetchRepos = async ({

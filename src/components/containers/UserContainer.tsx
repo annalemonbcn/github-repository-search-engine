@@ -1,37 +1,27 @@
 // Hooks
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 // Types
 import { User } from "../../types";
 
-// Query
-import { fetchUserQuery } from "../../assets/graphqlQueries";
+// Fetching
+import fetchUser from "../../api/services/fetchuser";
+
+// Components
 import UserView from "../views/UserView";
 
 
 const UserContainer = () => {
-  const [user, setUser] = useState<User | undefined>();
+  // TODO: implement isError
+  const { isLoading, isError, data } = useQuery(["users"], fetchUser);
 
-  useEffect(() => {
-    fetch("https://api.github.com/graphql", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${import.meta.env.VITE_GITHUB_APIKEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ query: fetchUserQuery }),
-    })
-      .then((res) => {
-        // console.log("res", res);
-        if (!res.ok) throw new Error("Error en el proceso");
-        return res.json();
-      })
-      .then((res) => setUser(res.data.user));
-  }, []);
+  const user: User = data;
 
-  console.log('user', user)
-
-  return <UserView user={user} />
+  if (!isLoading) {
+    return <UserView user={user} />;
+  } else {
+    return <div>Cargando...</div>;
+  }
 };
 
 export default UserContainer;

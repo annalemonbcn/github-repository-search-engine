@@ -2,7 +2,7 @@
 import { RepositoriesReponseFromAPI, Repo, FetchReposResult } from "../../types";
 
 // Query
-import { fetchReposQuery } from "../../assets/graphqlQueries";
+import { fetchReposQuery } from "../../queries/graphqlQueries";
 
 /**
  * Fetch repos from GraphQL Github API
