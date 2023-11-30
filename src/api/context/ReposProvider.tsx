@@ -1,10 +1,5 @@
 // Hooks
-import {
-  ReactNode,
-  createContext,
-  useEffect,
-  useState,
-} from "react";
+import { ReactNode, createContext, useState } from "react";
 
 // Types
 import { Repo } from "../../types";
@@ -45,13 +40,6 @@ const ReposProvider = (props: ReposProviderProps) => {
   const [sortByName, setSortByName] = useState<boolean>(false);
   const [filterByName, setFilterByName] = useState<string | null>(null);
   const [filterByLanguage, setFilterByLanguage] = useState<string | null>(null);
-
-  useEffect(() => {
-    console.log('repositories', repositories)
-    console.log('languagesList', languagesList)
-    console.log('hasNextPage', hasNextPage)
-    console.log('nextCursor', nextCursor)
-  }, [repositories])
 
   /**
    * Toggles the sortByName value on state

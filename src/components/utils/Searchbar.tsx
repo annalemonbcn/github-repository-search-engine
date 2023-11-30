@@ -18,6 +18,9 @@ const Searchbar = () => {
 
   // Context
   const searchContext = useContext(SearchContext);
+  if (!searchContext) return null; 
+  const { setQuery } = searchContext;
+  
 
   /**
    * Set new query into SearchContext.query
@@ -26,29 +29,20 @@ const Searchbar = () => {
     // Get input value
     const newQuery = inputRef.current?.value;
     // Set query 
-    searchContext?.setQuery(newQuery || "");
+    setQuery(newQuery || "");
   }
 
 
-  const handleKeyDown = (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ): void => {
-    if (event.key === "Enter") {
-      submitQuery();
-    }
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") submitQuery();
   };
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    if (event.target.value === "") {
-      handleReset();
-    }
+    if (event.target.value === "") handleReset();
   };
 
   const handleReset = () => {
-    // Reset input value
-    if (inputRef.current) {
-      inputRef.current.value = "";
-    }
+    if (inputRef.current) inputRef.current.value = ""
   };
 
 

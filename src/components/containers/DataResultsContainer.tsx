@@ -2,11 +2,11 @@
 import { useState, useEffect, useMemo, useContext, useCallback } from "react";
 
 // Types
-import { Repo } from "../../types";
+import { Repo, FetchReposResult } from "../../types";
 
 // Utils
 import fetchRepos from "../../api/services/fetchRepos";
-import { getLanguagesFromRepositoriesArray } from "../utils/func/utils";
+import { updateReposContext } from "../utils/func/reposUtils";
 
 // Components
 import DataResultsView from "../views/DataResultsView";
@@ -16,40 +16,55 @@ import { SearchContext } from "../../api/context/SearchProvider";
 import { ReposContext } from "../../api/context/ReposProvider";
 
 const DataResultsContainer = () => {
-  // Context
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState<boolean>();
+
+  // Contexts
   const searchContext = useContext(SearchContext);
   const reposContext = useContext(ReposContext);
-  const [isLoading, setIsLoading] = useState(false);
-  
+
+  const query = searchContext?.query;
+
+  const {
+    repositories,
+    setRepositories,
+    filterByName,
+    filterByLanguage,
+    sortByName,
+    setHasNextPage,
+    setNextCursor,
+    setLanguagesList,
+  } = reposContext || {};
+
+
   /**
    * Aux method for fetching the data
    * Set data into context
    */
   const fetchData = useCallback(async () => {
     setIsLoading(true);
-    try {
-      if (searchContext?.query) {
-        const data = await fetchRepos(searchContext.query);
-        // Handle data
-        const { repos, nextCursor, hasNextPage } = data;
-        const languages: string[] = [
-          "All",
-          ...getLanguagesFromRepositoriesArray(repos),
-        ];
-        // Set data into repos context
-        if (reposContext) {
-          reposContext.setRepositories(repos);
-          reposContext.setHasNextPage(hasNextPage);
-          reposContext.setNextCursor(nextCursor);
-          reposContext.setLanguagesList(languages);
-        }
+    setIsError(false);
+    if (query) {
+      try {
+        const data: FetchReposResult = await fetchRepos(query);
+        // Update reposContext
+        if (setRepositories && setHasNextPage && setNextCursor && setLanguagesList)
+          updateReposContext(
+            data,
+            false,
+            setRepositories,
+            setHasNextPage,
+            setNextCursor,
+            setLanguagesList
+          );
+      } catch (error) {
+        console.error("Error:", error);
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Error:", error);
-    } finally {
-      setIsLoading(false);
     }
-  }, [searchContext?.query])
+  }, [query, reposContext]);
 
   /**
    * useEffect for fetching data everytime the searchContext.query changes
@@ -59,7 +74,7 @@ const DataResultsContainer = () => {
   }, [fetchData]);
 
   // Local data
-  const localRepos: Repo[] | undefined = reposContext?.repositories;
+  const localRepos: Repo[] | undefined = repositories;
 
   /**
    * Filters the repositories by name or languageg
@@ -68,7 +83,6 @@ const DataResultsContainer = () => {
   const filteredRepositories = useMemo(() => {
     if (!localRepos?.length) return [];
 
-    const { filterByName, filterByLanguage } = reposContext || {};
     return localRepos.filter((repo) => {
       const nameCondition =
         !filterByName ||
@@ -81,33 +95,34 @@ const DataResultsContainer = () => {
 
       return nameCondition && languageCondition;
     });
-  }, [localRepos, reposContext?.filterByName, reposContext?.filterByLanguage]);
+  }, [localRepos, filterByName, filterByLanguage]);
 
   /**
    * Orders the repositories by name or by language
    * useMemo -> to prevent the overcalculating of that var
    */
   const sortedRepositories = useMemo(() => {
-    if (!filteredRepositories.length || !reposContext?.sortByName) {
+    if (!filteredRepositories.length || !sortByName) {
       return filteredRepositories;
     }
     return filteredRepositories.sort((a, b) => a.name.localeCompare(b.name));
-  }, [filteredRepositories, reposContext?.sortByName]);
+  }, [filteredRepositories, sortByName]);
 
+  // Render
   const renderContent = () => {
-    if (isLoading || !searchContext?.query) return null;
+    if (isLoading || !query) return null;
 
-    if (!localRepos?.length) {
+    if (isError) return <p>Oops! Something went wrong</p>;
+
+    if (!localRepos?.length)
       return <p>This user doesn't have any public repositories yet</p>;
-    }
 
-    if (sortedRepositories.length) {
+    if (sortedRepositories.length)
       return (
         <div className="w-5/6 mx-auto">
           <DataResultsView sortedRepositories={sortedRepositories} />
         </div>
       );
-    }
 
     return null;
   };

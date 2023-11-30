@@ -4,7 +4,6 @@ import React, { createContext, useState, ReactNode } from "react";
 interface SearchContextProps {
   query: string | undefined;
   setQuery: React.Dispatch<React.SetStateAction<string | undefined>>;
-  // setQuery: (newQueryValue: string) => void
   resetQuery: () => void
 }
 
