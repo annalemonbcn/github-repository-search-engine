@@ -2,7 +2,7 @@
 import { User } from "../../types"
 
 // Date formatter
-import { formatDate } from "../../utils/func/utils"
+import { formatDate } from "../utils/func/utils"
 
 // Icons
 import GitHubIcon from "../utils/svg/GitHubIcon"

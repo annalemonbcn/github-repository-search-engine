@@ -8,7 +8,7 @@ import { Repo } from "../../types";
 
 // Utils
 import fetchRepos from "../../api/services/fetchRepos";
-import { getLanguagesFromRepositoriesArray } from "../../utils/func/utils";
+import { getLanguagesFromRepositoriesArray } from "../utils/func/utils";
 
 // Components
 import DataResultsView from "../views/DataResultsView";

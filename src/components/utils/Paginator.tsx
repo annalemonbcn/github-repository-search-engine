@@ -1,6 +1,3 @@
-// Types
-import { FetchReposResult } from "../types";
-
 // Utils
 import ButtonGray from "./buttons/ButtonGray";
 
@@ -9,7 +6,7 @@ import { ReposContext } from "../../api/context/ReposProvider";
 import { useContext } from "react";
 import fetchRepos from "../../api/services/fetchRepos";
 import { SearchContext } from "../../api/context/SearchProvider";
-import { getLanguagesFromRepositoriesArray } from "../../utils/func/utils";
+import { getLanguagesFromRepositoriesArray } from "./func/utils";
 
 const Paginator = () => {
   // Repos context
