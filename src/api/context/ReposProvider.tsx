@@ -44,7 +44,9 @@ const ReposProvider = (props: ReposProviderProps) => {
   /**
    * Toggles the sortByName value on state
    */
+  // TODO: check
   const toggleSortByName = () => {
+    console.log("button pressed")
     setSortByName((prevState) => !prevState);
   };
 

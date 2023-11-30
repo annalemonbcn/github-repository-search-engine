@@ -7,19 +7,11 @@ import "./index.css";
 import ReposProvider from "./api/context/ReposProvider.tsx";
 import SearchProvider from "./api/context/SearchProvider.tsx";
 
-// Tanstack
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-
-const queryClient = new QueryClient();
-
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <NextUIProvider>
     <SearchProvider>
       <ReposProvider>
-        {/*  TODO: delete */}
-        <QueryClientProvider client={queryClient}> 
-          <App />
-        </QueryClientProvider>
+        <App />+{" "}
       </ReposProvider>
     </SearchProvider>
   </NextUIProvider>

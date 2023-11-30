@@ -12,7 +12,6 @@ import { Tooltip } from "@nextui-org/tooltip";
 import { ReposContext } from "../../api/context/ReposProvider";
 
 const ArrowsIcon = () => {
-  // TODO: check
   return (
     <Tooltip
       showArrow={true}
@@ -21,7 +20,7 @@ const ArrowsIcon = () => {
       classNames={{
         base: [
           "bg-white border border-slate-200 rounded-md",
-          "before:bg-slate-400"
+          "before:bg-white before:border-slate-200"
         ]
       }}
     >
@@ -41,18 +40,23 @@ const ArrowsIcon = () => {
 const FiltersContainer = () => {
 
   const reposContext = useContext(ReposContext)
+  if(!reposContext) return null
+  const {
+    toggleSortByName,
+    setFilterByName
+  } = reposContext;
 
   return (
     <div className="flex flex-col md:flex-row items-center justify-between filtersContainer">
       <div className="flex items-center gap-2 w-1/2">
-        <div onClick={reposContext?.toggleSortByName}>
+        <div onClick={toggleSortByName}>
           <ButtonGray text="Name" icon={<ArrowsIcon />} />
         </div>
         <input
           type="text"
           className="border border-slate-300 rounded-md px-[12px] py-[3px]"
           placeholder="Or filter by name"
-          onChange={(e) => reposContext?.setFilterByName(e.target.value)}
+          onChange={(e) => setFilterByName(e.target.value)}
         />
       </div>
       <div className="w-1/2 text-right">
