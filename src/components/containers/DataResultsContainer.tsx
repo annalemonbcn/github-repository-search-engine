@@ -100,10 +100,6 @@ const DataResultsContainer = () => {
       : filteredRepositories;
   }, [filteredRepositories, reposContext?.sortByName]);
 
-  
-  const dataResultsViewProps = {
-    sortedRepositories,
-  };
 
   if (!isLoading && searchContext?.query) {
     return (
