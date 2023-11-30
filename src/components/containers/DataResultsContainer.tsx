@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 // Hooks
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useContext } from "react";
 
 // Types
 import { Repo } from "../../types";
@@ -14,12 +14,33 @@ import { getLanguagesFromRepositoriesArray } from "../../utils/func/utils";
 // Components
 import DataResultsView from "../views/DataResultsView";
 
+// Context
+import { SearchContext } from "../../api/context/SearchProvider";
+
 const DataResultsContainer = () => {
+  // Context
+  const searchContext = useContext(SearchContext);
+  let username: string;
+  if (searchContext && searchContext.query) {
+    username = searchContext.query;
+    console.log("setting username --->", username);
+  }
+
   // React-query hook
-  const { isLoading, isError, data, hasNextPage, fetchNextPage } =
-    useInfiniteQuery(["repos"], ({ pageParam }) => fetchRepos({ pageParam }), {
-      getNextPageParam: (lastPage) => lastPage.nextCursor || undefined,
-    });
+  const { isLoading, isError, data, hasNextPage, refetch, fetchNextPage } =
+    useInfiniteQuery(
+      ["repos"],
+      ({ pageParam }) => {
+        console.log("username inside useInfiniteQuery", username);
+        return fetchRepos({ username, pageParam });
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor || undefined,
+        enabled: false,
+      }
+    );
+
+  // console.log(data);
 
   // Local data
   const repositories: Repo[] = data?.pages?.flatMap((page) => page.repos) ?? [];

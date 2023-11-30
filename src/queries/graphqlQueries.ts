@@ -1,6 +1,6 @@
-export const fetchReposQuery = (nextCursor?: string | null) => `
+export const fetchReposQuery = (username: string, nextCursor?: string | null) => `
   {
-    user(login: "midudev") {
+    user(login: "${username}") {
       repositories(
         first: 10,
         after: ${nextCursor ? `"${nextCursor}"` : null},      
@@ -40,9 +40,9 @@ export const fetchReposQuery = (nextCursor?: string | null) => `
   }
 `;
 
-export const fetchUserQuery = `
+export const fetchUserQuery = (username: string) => `
   {
-    user(login: "midudev") {
+    user(login: "${username}") {
       avatarUrl
       login
       url

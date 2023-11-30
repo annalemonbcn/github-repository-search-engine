@@ -2,8 +2,9 @@
 import React, { createContext, useState, ReactNode } from "react";
 
 interface SearchContextProps {
-  query: string;
-  setQuery: React.Dispatch<React.SetStateAction<string>>;
+  query: string | undefined;
+  setQuery: React.Dispatch<React.SetStateAction<string | undefined>>;
+  // setQuery: (newQueryValue: string) => void
   resetQuery: () => void
 }
 
@@ -18,7 +19,12 @@ interface SearchProviderProps {
 
 const SearchProvider = (props: SearchProviderProps) => {
   // State
-  const [query, setQuery] = useState<string>("");
+  const [query, setQuery] = useState<string | undefined>(undefined);
+  
+  // let query;
+  // const setQuery = (newQueryValue: string) => {
+  //   query = newQueryValue;
+  // }
 
   const resetQuery = (): void => {
     setQuery("");

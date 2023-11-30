@@ -7,7 +7,7 @@ import { Repo, FetchReposResult } from "../../types";
 import UserContainer from "../containers/UserContainer";
 import RepoView from "./RepoView";
 import FiltersContainer from "../containers/FiltersContainer";
-import Paginator from "../../utils/Paginator";
+import Paginator from "../utils/Paginator";
 
 interface DataResultsViewProps {
   sortedRepositories: Repo[];

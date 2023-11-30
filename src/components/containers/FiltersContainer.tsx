@@ -1,9 +1,9 @@
 import React from "react";
 
 // Button
-import ButtonGray from "../../utils/buttons/ButtonGray";
-import Dropwdown from "../../utils/Dropwdown";
-import ArrowDownIcon from "../../utils/svg/ArrowDownIcon";
+import ButtonGray from "../utils/buttons/ButtonGray";
+import Dropwdown from "../utils/Dropwdown";
+import ArrowDownIcon from "../utils/svg/ArrowDownIcon";
 
 import { Tooltip } from "@nextui-org/tooltip";
 

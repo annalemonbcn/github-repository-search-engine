@@ -3,8 +3,8 @@ import { Repo } from "../../types"
 
 // Utils
 import { formatDate } from "../../utils/func/utils";
-import StarIcon from "../../utils/svg/StarIcon";
-import TopicBadge from "../../utils/buttons/TopicBadge";
+import StarIcon from "../utils/svg/StarIcon";
+import TopicBadge from "../utils/buttons/TopicBadge";
 
 
 interface RepoViewProps {

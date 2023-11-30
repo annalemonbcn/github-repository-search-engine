@@ -9,7 +9,7 @@ import SearchIcon from './svg/SearchIcon';
 import CloseIcon from './svg/CloseIcon';
 
 // Context
-import { SearchContext } from '../api/context/SearchProvider';
+import { SearchContext } from '../../api/context/SearchProvider';
 
 const Searchbar = () => {
   // State

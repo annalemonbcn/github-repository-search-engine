@@ -4,8 +4,8 @@ import { User, UserResponseDataFromAPI } from "../../types";
 // Query
 import { fetchUserQuery } from "../../queries/graphqlQueries";
 
-const fetchUser = async (): Promise<User> => {
-  const query = fetchUserQuery;
+const fetchUser = async (username: string): Promise<User> => {
+  const query = fetchUserQuery(username);
 
   const response = await fetch("https://api.github.com/graphql", {
     method: "POST",

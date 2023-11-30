@@ -5,10 +5,10 @@ import { User } from "../../types"
 import { formatDate } from "../../utils/func/utils"
 
 // Icons
-import GitHubIcon from "../../utils/svg/GitHubIcon"
-import FollowersIcon from "../../utils/svg/FollowersIcon"
-import TwitterIcon from "../../utils/svg/TwitterIcon"
-import EmailIcon from "../../utils/svg/EmailIcon"
+import GitHubIcon from "../utils/svg/GitHubIcon"
+import FollowersIcon from "../utils/svg/FollowersIcon"
+import TwitterIcon from "../utils/svg/TwitterIcon"
+import EmailIcon from "../utils/svg/EmailIcon"
 
 
 interface UserViewProps {

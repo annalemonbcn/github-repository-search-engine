@@ -4,12 +4,11 @@ import { useContext } from 'react';
 import { SearchContext } from '../../api/context/SearchProvider';
 
 // Components
-import Searchbar from '../../utils/Searchbar';
+import Searchbar from '../utils/Searchbar';
 
 const SearchContainer = () => {
 
   const searchContext = useContext(SearchContext);
-  console.log('searchContext', searchContext)
 
   return (
     <div className="w-5/6 lg:w-4/6 mx-auto my-10 searchContainer">

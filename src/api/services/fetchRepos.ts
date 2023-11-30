@@ -10,11 +10,13 @@ import { fetchReposQuery } from "../../queries/graphqlQueries";
  * @returns an FetchReposResult type object
  */
 const fetchRepos = async ({
-  pageParam = null,
+  username,
+  pageParam = null
 }: {
+  username: string
   pageParam?: string | null;
 }): Promise<FetchReposResult> => {
-  const query = fetchReposQuery(pageParam);
+  const query = fetchReposQuery(username, pageParam);
 
   const response = await fetch("https://api.github.com/graphql", {
     method: "POST",
@@ -27,6 +29,7 @@ const fetchRepos = async ({
   if (!response.ok) throw new Error("Error while making the request");
   
   const data: RepositoriesReponseFromAPI = await response.json();
+  // console.log('data from fetchRepos', data)
 
   return {
     repos: mapResponseData(data.data.user.repositories.nodes),
