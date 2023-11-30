@@ -20,7 +20,7 @@ const ArrowsIcon = () => {
       content="Order from A-Z"
       classNames={{
         base: [
-          "bg-white border border-black",
+          "bg-white border border-slate-200 rounded-md",
           "before:bg-slate-400"
         ]
       }}

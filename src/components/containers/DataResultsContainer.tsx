@@ -47,6 +47,7 @@ const DataResultsContainer = () => {
     if (query) {
       try {
         const data: FetchReposResult = await fetchRepos(query);
+        console.log('data', data)
         // Update reposContext
         if (setRepositories && setHasNextPage && setNextCursor && setLanguagesList)
           updateReposContext(
@@ -64,7 +65,7 @@ const DataResultsContainer = () => {
         setIsLoading(false);
       }
     }
-  }, [query, reposContext]);
+  }, [query]);
 
   /**
    * useEffect for fetching data everytime the searchContext.query changes
