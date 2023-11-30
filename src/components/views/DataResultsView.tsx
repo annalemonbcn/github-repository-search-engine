@@ -1,7 +1,7 @@
-import React from "react";
+import { useContext } from "react";
 
 // Types
-import { Repo, FetchReposResult } from "../../types";
+import { Repo } from "../../types";
 
 // Components
 import UserContainer from "../containers/UserContainer";
@@ -9,42 +9,16 @@ import RepoView from "./RepoView";
 import FiltersContainer from "../containers/FiltersContainer";
 import Paginator from "../utils/Paginator";
 
+// Context
+import { SearchContext } from "../../api/context/SearchProvider";
+
 interface DataResultsViewProps {
-  sortedRepositories: Repo[];
-  languagesList: string[];
-  sortByName: boolean;
-  toggleSortByName: () => void;
-  setFilterByName: React.Dispatch<React.SetStateAction<string | null>>;
-  filterByLanguage: string | undefined;
-  setFilterByLanguage: React.Dispatch<React.SetStateAction<string | null>>;
-  isError: boolean;
-  hasNextPage: boolean | undefined;
-  fetchNextPage: (options?: {
-    pageParam?: string | null | undefined;
-  }) => Promise<FetchReposResult>;
+  sortedRepositories: Repo[]
 }
 
-const DataResultsView = (props: DataResultsViewProps) => {
-  const {
-    sortedRepositories,
-    languagesList,
-    sortByName,
-    toggleSortByName,
-    setFilterByName,
-    filterByLanguage,
-    setFilterByLanguage,
-    hasNextPage,
-    fetchNextPage,
-  } = props;
-
-  const filtersContainerProps = {
-    languagesList,
-    sortByName,
-    toggleSortByName,
-    filterByLanguage,
-    setFilterByName,
-    setFilterByLanguage
-  };
+const DataResultsView = ({ sortedRepositories }: DataResultsViewProps) => {
+  // Search context
+  const searchContext = useContext(SearchContext);
 
   return (
     <div className="flex flex-col gap-4">
@@ -54,12 +28,10 @@ const DataResultsView = (props: DataResultsViewProps) => {
         </div>
         <div className="md:w-2/3 flex flex-col gap-4">
           <h2 className="text-xl font-semibold">
-            {/* TODO */}
-            {/* Search results for user {searchContext?.query} */}
-            Search results for user
+            Search results for user {searchContext?.query}
           </h2>
           {/* Filters */}
-          <FiltersContainer {...filtersContainerProps} />
+          <FiltersContainer />
           {/* Repositories list */}
           <div className="flex flex-col gap-4">
             {sortedRepositories.length > 0 &&
@@ -68,7 +40,7 @@ const DataResultsView = (props: DataResultsViewProps) => {
               ))}
           </div>
           {/* Pagination */}
-          <Paginator hasNextPage={hasNextPage} fetchNextPage={fetchNextPage} />
+          <Paginator />
         </div>
       </div>
     </div>

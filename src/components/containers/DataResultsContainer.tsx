@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 // Hooks
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { useMemo, useState, useContext } from "react";
+import { useMemo, useContext } from "react";
 
 // Types
 import { Repo } from "../../types";
@@ -16,124 +15,115 @@ import DataResultsView from "../views/DataResultsView";
 
 // Context
 import { SearchContext } from "../../api/context/SearchProvider";
+import { ReposContext } from "../../api/context/ReposProvider";
+
 
 const DataResultsContainer = () => {
   // Context
   const searchContext = useContext(SearchContext);
-  let username: string;
-  if (searchContext && searchContext.query) {
-    username = searchContext.query;
-    console.log("setting username --->", username);
-  }
-
-  // React-query hook
-  const { isLoading, isError, data, hasNextPage, refetch, fetchNextPage } =
-    useInfiniteQuery(
-      ["repos"],
-      ({ pageParam }) => {
-        console.log("username inside useInfiniteQuery", username);
-        return fetchRepos({ username, pageParam });
-      },
-      {
-        getNextPageParam: (lastPage) => lastPage.nextCursor || undefined,
-        enabled: false,
-      }
-    );
-
-  // console.log(data);
+  const reposContext = useContext(ReposContext);
 
   // Local data
-  const repositories: Repo[] = data?.pages?.flatMap((page) => page.repos) ?? [];
-  const languagesList = [
-    "All",
-    ...getLanguagesFromRepositoriesArray(repositories),
-  ];
+  let isLoading: boolean = false;
 
-  // State
-  const [sortByName, setSortByName] = useState<boolean>(false);
-  const [filterByName, setFilterByName] = useState<string | null>(null);
-  const [filterByLanguage, setFilterByLanguage] = useState<string | null>(null);
+  /**
+   * Aux method for fetching the data
+   * Set data into context
+   */
+  const fetchData = async () => {
+    // Set isLoading
+    isLoading = true;
+
+    if (searchContext && searchContext.query) {
+      try {
+        const data = await fetchRepos(searchContext.query);
+        // Handle data
+        const { repos, nextCursor, hasNextPage } = data;
+        const languages: string[] = ["All", ...getLanguagesFromRepositoriesArray(repos)]
+        // Set data into repos context
+        if (reposContext) {
+          reposContext.setRepositories(repos);
+          reposContext.setHasNextPage(hasNextPage);
+          reposContext.setNextCursor(nextCursor);
+          reposContext.setLanguagesList(languages)
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        isLoading = false;
+      }
+    }
+  };
+
+  /**
+   * useEffect for fetching data everytime the searchContext.query changes
+   */
+  useEffect(() => {
+    fetchData();
+  }, [searchContext?.query]);
+
+  // Local data
+  const localRepos: Repo[] | undefined = reposContext?.repositories;
+
 
   /**
    * Filters the repositories by name or language
    * useMemo -> to  prevent the overcalculating of that var
    */
   const filteredRepositories = useMemo(() => {
-    if (!isLoading) {
-      //Filter by name
-      if (filterByName !== null && filterByName.length > 0) {
-        return repositories.filter((repo) => {
-          return repo.name.toLowerCase().includes(filterByName.toLowerCase());
-        });
-      }
-      // Filter by language
-      if (filterByLanguage !== null && filterByLanguage.length > 0) {
-        if (filterByLanguage === "All") {
-          return repositories;
-        } else {
-          return repositories.filter((repo) => {
-            return repo.primaryLanguage?.name.includes(filterByLanguage);
-          });
-        }
-      }
-    }
-    return repositories;
-  }, [repositories, filterByName, filterByLanguage]);
+    return localRepos
+      ? // Filter by name
+        reposContext?.filterByName !== null && reposContext?.filterByName?.length > 0
+        ? localRepos.filter((repo) => {
+            return repo.name.toLowerCase().includes(reposContext?.filterByName.toLowerCase());
+          })
+        : // Filter by language
+        reposContext?.filterByLanguage !== null &&
+          reposContext?.filterByLanguage.length > 0 &&
+          reposContext?.filterByLanguage !== "All"
+        ? localRepos.filter((repo) => {
+            return repo.primaryLanguage?.name.includes(reposContext?.filterByLanguage);
+          })
+        : localRepos
+      : [];
+  }, [localRepos, reposContext?.filterByName, reposContext?.filterByLanguage]);
 
   /**
    * Orders the repositories by name or by language
    * useMemo -> to prevent the overcalculating of that var
    */
   const sortedRepositories = useMemo(() => {
-    return !isLoading && sortByName
+    return filteredRepositories && reposContext?.sortByName
       ? filteredRepositories.toSorted((a, b) => {
           return a.name.localeCompare(b.name);
         })
       : filteredRepositories;
-  }, [filteredRepositories, sortByName]);
+  }, [filteredRepositories, reposContext?.sortByName]);
 
-  /**
-   * Toggles the sortByName value on state
-   */
-  const toggleSortByName = () => {
-    setSortByName((prevState) => !prevState);
-  };
-
+  
   const dataResultsViewProps = {
     sortedRepositories,
-    languagesList,
-    sortByName,
-    toggleSortByName,
-    setFilterByName,
-    filterByLanguage,
-    setFilterByLanguage,
-    isError,
-    hasNextPage,
-    fetchNextPage,
   };
 
-  // TODO: refactor return
-  return (
-    <>
-      {/* If loading */}
-      {isLoading && <p>Loading...</p>}
-
-      {/* If user has > 0 repos */}
-      {!isLoading && sortedRepositories.length > 0 && (
-        <div className="w-5/6 mx-auto">
-          <DataResultsView {...dataResultsViewProps} />
-        </div>
-      )}
-
-      {/* If is error */}
-      {isError && <p>Some error</p>}
-
-      {/* If user has no repos */}
-      {!isLoading && !isError && repositories.length === 0 && (
-        <p>This user doesn't have any public repositories yet!</p>
-      )}
-    </>
-  );
+  if (!isLoading && searchContext?.query) {
+    return (
+      <>
+        {localRepos?.length === 0 ? (
+          <p>This user doesn't have any public repositories yet</p>
+        ) : (
+          <>
+            {/* If user has > 0 repos */}
+            {sortedRepositories && sortedRepositories.length > 0 && (
+              <div className="w-5/6 mx-auto">
+                <DataResultsView sortedRepositories={sortedRepositories} />
+              </div>
+            )}
+          </>
+        )}
+      </>
+    );
+  }
+  
 };
 
 export default DataResultsContainer;

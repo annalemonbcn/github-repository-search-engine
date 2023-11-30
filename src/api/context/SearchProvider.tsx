@@ -20,11 +20,6 @@ interface SearchProviderProps {
 const SearchProvider = (props: SearchProviderProps) => {
   // State
   const [query, setQuery] = useState<string | undefined>(undefined);
-  
-  // let query;
-  // const setQuery = (newQueryValue: string) => {
-  //   query = newQueryValue;
-  // }
 
   const resetQuery = (): void => {
     setQuery("");

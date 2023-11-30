@@ -1,7 +1,6 @@
 // Hooks
 import React, { useState, useRef, useContext } from 'react'
 
-
 // Utils
 import ButtonGreen from './buttons/ButtonGreen';
 import ButtonWhite from './buttons/ButtonWhite';
@@ -20,13 +19,14 @@ const Searchbar = () => {
   // Context
   const searchContext = useContext(SearchContext);
 
+  /**
+   * Set new query into SearchContext.query
+   */
   const submitQuery = () => {
     // Get input value
     const newQuery = inputRef.current?.value;
-    // Set query
+    // Set query 
     searchContext?.setQuery(newQuery || "");
-
-    // Call fetchRepos()
   }
 
 

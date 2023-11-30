@@ -1,6 +1,3 @@
-// Hooks
-import { useQuery } from "@tanstack/react-query";
-
 // Types
 import { User } from "../../types";
 
@@ -9,15 +6,38 @@ import fetchUser from "../../api/services/fetchUser";
 
 // Components
 import UserView from "../views/UserView";
-
+import { useContext, useEffect, useState } from "react";
+import { SearchContext } from "../../api/context/SearchProvider";
 
 const UserContainer = () => {
-  // TODO: implement isError
-  const { isLoading, isError, data } = useQuery(["users"], fetchUser);
+  const searchContext = useContext(SearchContext);
 
-  const user: User = data;
+  const [user, setUser] = useState<User | undefined>();
 
-  if (!isLoading) {
+  let isLoading = false;
+  
+
+  const fetchData = async () => {
+    // Set isLoading
+    isLoading = true;
+
+    if (searchContext && searchContext.query) {
+      try {
+        const data = await fetchUser(searchContext.query);
+        setUser(data)
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        isLoading = false;
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [searchContext?.query]);
+
+  if (!isLoading && user) {
     return <UserView user={user} />;
   } else {
     return <div>Cargando...</div>;
