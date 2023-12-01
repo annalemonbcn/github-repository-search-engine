@@ -1,47 +1,48 @@
 // Types
 import { User } from "../../types";
 
+// Hooks
+import { useContext, useEffect, useState, useCallback } from "react";
+
 // Fetching
 import fetchUser from "../../api/services/fetchUser";
 
 // Components
 import UserView from "../views/UserView";
-import { useContext, useEffect, useState } from "react";
 import { SearchContext } from "../../api/context/SearchProvider";
 
 const UserContainer = () => {
   const searchContext = useContext(SearchContext);
-
+  const query = searchContext?.query;
   const [user, setUser] = useState<User | undefined>();
-
-  let isLoading = false;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     // Set isLoading
-    isLoading = true;
+    setIsLoading(true);
 
-    if (searchContext && searchContext.query) {
+    if (query) {
       try {
-        const data = await fetchUser(searchContext.query);
+        const data = await fetchUser(query);
         setUser(data)
       } catch (error) {
         console.error("Error:", error);
       } finally {
-        isLoading = false;
+        setIsLoading(false);
       }
     }
-  };
+  }, [query]);
 
   useEffect(() => {
     fetchData();
-  }, [searchContext?.query]);
+  }, [fetchData]);
 
   if (!isLoading && user) {
     return <UserView user={user} />;
-  } else {
-    return <div>Cargando...</div>;
   }
+  return <div>Cargando...</div>;
+  
 };
 
 export default UserContainer;
