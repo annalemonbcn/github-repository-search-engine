@@ -34,7 +34,7 @@ const DataResultsContainer = () => {
     setHasNextPage,
     setNextCursor,
     setLanguagesList,
-  } = reposContext || {};
+  } = reposContext ;
 
 
   /**

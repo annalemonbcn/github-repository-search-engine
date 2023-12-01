@@ -42,14 +42,18 @@ const FiltersContainer = () => {
   const reposContext = useContext(ReposContext)
   if(!reposContext) return null
   const {
-    toggleSortByName,
+    setSortByName,
     setFilterByName
   } = reposContext;
+
+  const handleToggleSortByName = () => {
+    setSortByName((prevSort) => !prevSort);
+  }
 
   return (
     <div className="flex flex-col md:flex-row items-center justify-between filtersContainer">
       <div className="flex items-center gap-2 w-1/2">
-        <div onClick={toggleSortByName}>
+        <div onClick={handleToggleSortByName}>
           <ButtonGray text="Name" icon={<ArrowsIcon />} />
         </div>
         <input

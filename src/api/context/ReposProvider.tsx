@@ -1,5 +1,5 @@
 // Hooks
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
 
 // Types
 import { Repo } from "../../types";
@@ -15,7 +15,7 @@ interface ReposContextProps {
   nextCursor: string | undefined;
   setNextCursor: React.Dispatch<React.SetStateAction<string | undefined>>;
   sortByName: boolean
-  toggleSortByName: () => void
+  setSortByName: React.Dispatch<React.SetStateAction<boolean>>
   filterByName: string | null
   setFilterByName: React.Dispatch<React.SetStateAction<string | null>>
   filterByLanguage: string | null
@@ -41,14 +41,9 @@ const ReposProvider = (props: ReposProviderProps) => {
   const [filterByName, setFilterByName] = useState<string | null>(null);
   const [filterByLanguage, setFilterByLanguage] = useState<string | null>(null);
 
-  /**
-   * Toggles the sortByName value on state
-   */
-  // TODO: check
-  const toggleSortByName = () => {
-    console.log("button pressed")
-    setSortByName((prevState) => !prevState);
-  };
+  useEffect(() => {
+    console.log('sortByName --->', sortByName)
+  }, [sortByName])
 
   // Provider value
   const reposContextValue: ReposContextProps = {
@@ -61,7 +56,7 @@ const ReposProvider = (props: ReposProviderProps) => {
     nextCursor,
     setNextCursor,
     sortByName,
-    toggleSortByName,
+    setSortByName,
     filterByName,
     setFilterByName,
     filterByLanguage,

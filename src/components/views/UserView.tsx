@@ -15,8 +15,6 @@ interface UserViewProps {
 }
 
 const UserView = ({ user }: UserViewProps) => {
-
-  console.log('user', user)
   
   const avatarUrl = user?.avatarUrl;
   const login = user?.login;
