@@ -34,7 +34,7 @@ const DataResultsContainer = () => {
     setHasNextPage,
     setNextCursor,
     setLanguagesList,
-  } = reposContext ;
+  } = reposContext || {};
 
 
   /**
@@ -102,10 +102,11 @@ const DataResultsContainer = () => {
    * useMemo -> to prevent the overcalculating of that var
    */
   const sortedRepositories = useMemo(() => {
-    if (!filteredRepositories.length || !sortByName) {
-      return filteredRepositories;
-    }
-    return filteredRepositories.sort((a, b) => a.name.localeCompare(b.name));
+    return sortByName
+      ? filteredRepositories.toSorted((a, b) => {
+          return a.name.localeCompare(b.name);
+        })
+      : filteredRepositories;
   }, [filteredRepositories, sortByName]);
 
   // Render
