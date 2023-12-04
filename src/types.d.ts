@@ -4,8 +4,9 @@ declare global {
   }
 }
 
+/** REPOSITORIES TYPES  */
 /**
- * * REPOSITORIES TYPES
+ * Basic repo type from graphql api
  */
 export type Repo = {
   name: string;
@@ -29,6 +30,9 @@ export type RepositoryTopics = {
   url: string;
 };
 
+/**
+ * Response ok from graphql api
+ */
 export type RepositoriesReponseFromAPI = {
   data: {
     user: {
@@ -40,6 +44,9 @@ export type RepositoriesReponseFromAPI = {
   };
 };
 
+/**
+ * Response ko from graphql api
+ */
 export type ErrorRepositoriesResponseFromAPI = {
   data: {
     user: null
@@ -66,6 +73,9 @@ type pageInfo = {
   hasPreviousPage: boolean;
 };
 
+/**
+ * What fetchRepos() returns if res.ok
+ */
 export type FetchReposResult = {
   repos: Repo[];
   hasNextPage: boolean;
@@ -74,8 +84,9 @@ export type FetchReposResult = {
 
 
 
+/** USER TYPES */
 /**
- * * USER TYPES
+ * User basic type from graphql api
  */
 export type User = {
   avatarUrl: string;
@@ -96,6 +107,9 @@ export type User = {
   createdAt: string;
 };
 
+/**
+ * Response from graphql api, even if its ok or ko
+ */
 export type UserResponseDataFromAPI = {
   data: {
     user: User;
