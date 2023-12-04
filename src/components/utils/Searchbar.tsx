@@ -71,7 +71,7 @@ const Searchbar = () => {
   };
 
   return (
-    <div className="w-5/6 mx-auto flex items-center relative searchbar">
+    <div className="md:w-5/6 mx-auto flex items-center relative searchbar">
       <div className="absolute left-2">
         <SearchIcon
           height="h-4"

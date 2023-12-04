@@ -48,7 +48,7 @@ const FiltersContainer = () => {
 
   return (
     <div className="flex flex-col md:flex-row items-center justify-between filtersContainer">
-      <div className="flex items-center gap-2 w-1/2">
+      <div className="flex items-center gap-2 md:w-1/2">
         <div onClick={handleToggleSortByName}>
           <ButtonGray text="Name" icon={<ArrowsIcon />} />
         </div>
@@ -59,7 +59,7 @@ const FiltersContainer = () => {
           onChange={(e) => setFilterByName(e.target.value)}
         />
       </div>
-      <div className="w-1/2 text-right">
+      <div className="md:w-1/2 text-right">
         <Dropwdown />
       </div>
     </div>
