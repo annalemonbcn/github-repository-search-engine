@@ -42,7 +42,7 @@ export const getLanguagesFromRepositoriesArray = (repositories: Repo[]) => {
 export const updateReposContext = (
   data: FetchReposResult,
   appendData: boolean,
-  setRepos: React.Dispatch<React.SetStateAction<Repo[]>>,
+  setRepos: React.Dispatch<React.SetStateAction<Repo[] | null>>,
   setHasNextPage: React.Dispatch<React.SetStateAction<boolean>>,
   setNextCursor: React.Dispatch<React.SetStateAction<string | undefined>>,
   setLanguagesList: React.Dispatch<React.SetStateAction<string[]>>

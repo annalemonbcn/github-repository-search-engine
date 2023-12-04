@@ -1,13 +1,13 @@
 // Hooks
-import { ReactNode, createContext, useEffect, useState } from "react";
+import { ReactNode, createContext, useState } from "react";
 
 // Types
 import { Repo } from "../../types";
 
 
 interface ReposContextProps {
-  repositories: Repo[];
-  setRepositories: React.Dispatch<React.SetStateAction<Repo[]>>;
+  repositories: Repo[] | null;
+  setRepositories: React.Dispatch<React.SetStateAction<Repo[] | null>>
   languagesList: string[]
   setLanguagesList: React.Dispatch<React.SetStateAction<string[]>>
   hasNextPage: boolean;
@@ -20,6 +20,7 @@ interface ReposContextProps {
   setFilterByName: React.Dispatch<React.SetStateAction<string | null>>
   filterByLanguage: string | null
   setFilterByLanguage: React.Dispatch<React.SetStateAction<string | null>>
+  resetReposContext: () => void
 }
 
 // Create context
@@ -33,7 +34,7 @@ interface ReposProviderProps {
 
 const ReposProvider = (props: ReposProviderProps) => {
 
-  const [repositories, setRepositories] = useState<Repo[]>([]);
+  const [repositories, setRepositories] = useState<Repo[] | null>(null);
   const [languagesList, setLanguagesList] = useState<string[]>([]);
   const [hasNextPage, setHasNextPage] = useState<boolean>(false);
   const [nextCursor, setNextCursor] = useState<string | undefined>();
@@ -41,9 +42,15 @@ const ReposProvider = (props: ReposProviderProps) => {
   const [filterByName, setFilterByName] = useState<string | null>(null);
   const [filterByLanguage, setFilterByLanguage] = useState<string | null>(null);
 
-  useEffect(() => {
-    console.log('sortByName --->', sortByName)
-  }, [sortByName])
+  const resetReposContext = () => {
+    setRepositories(null)
+    setLanguagesList([])
+    setHasNextPage(false)
+    setNextCursor(undefined)
+    setSortByName(false)
+    setFilterByName(null)
+    setFilterByLanguage(null)
+  }
 
   // Provider value
   const reposContextValue: ReposContextProps = {
@@ -60,7 +67,8 @@ const ReposProvider = (props: ReposProviderProps) => {
     filterByName,
     setFilterByName,
     filterByLanguage,
-    setFilterByLanguage
+    setFilterByLanguage,
+    resetReposContext
   };
 
   return (

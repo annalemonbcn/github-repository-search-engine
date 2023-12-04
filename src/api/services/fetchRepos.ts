@@ -3,6 +3,7 @@ import {
   RepositoriesReponseFromAPI,
   Repo,
   FetchReposResult,
+  ErrorRepositoriesResponseFromAPI,
 } from "../../types";
 
 // Query
@@ -16,7 +17,7 @@ import { fetchReposQuery } from "../../queries/graphqlQueries";
 const fetchRepos = async (
   username: string,
   nextCursor: string | null = null
-): Promise<FetchReposResult> => {
+): Promise<FetchReposResult | null> => {
   const query = fetchReposQuery(username, nextCursor);
 
   const response = await fetch("https://api.github.com/graphql", {
@@ -27,19 +28,22 @@ const fetchRepos = async (
     },
     body: JSON.stringify({ query }),
   });
-  if (!response.ok) throw new Error("Error while making the request");
+  // Check res
+  if (!response.ok) throw new Error("Error when making the request");
 
-  const data: RepositoriesReponseFromAPI = await response.json();
-
-  return {
-    repos: mapResponseData(data.data.user.repositories.nodes),
-    nextCursor: data.data.user.repositories.pageInfo.endCursor,
-    hasNextPage: data.data.user.repositories.pageInfo.hasNextPage,
-  };
+  const data: RepositoriesReponseFromAPI | ErrorRepositoriesResponseFromAPI =
+    await response.json();
+  if (data.data.user !== null) {
+    return {
+      repos: mapResponseData(data.data.user.repositories.nodes),
+      nextCursor: data.data.user.repositories.pageInfo.endCursor,
+      hasNextPage: data.data.user.repositories.pageInfo.hasNextPage,
+    };
+  }
+  return null;
 };
 
 export default fetchRepos;
-
 
 /**
  * Aux function to search for the repos with no primaryLanguage informed

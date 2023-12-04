@@ -8,6 +8,7 @@ import Header from "./components/Header";
 import DataResultsContainer from "./components/containers/DataResultsContainer";
 import SearchContainer from "./components/containers/SearchContainer";
 import Footer from "./components/Footer";
+import { Toaster } from "sonner";
 
 function App() {
   useEffect(() => {
@@ -21,6 +22,7 @@ function App() {
     <div className="flex flex-col min-h-screen text-center text-custom-black App">
       <div className="flex-grow">
         <Header />
+        <Toaster position="top-right" richColors />
         <SearchContainer />
         <DataResultsContainer />
       </div>

@@ -6,7 +6,9 @@ import { Repo, FetchReposResult } from "../../types";
 
 // Utils
 import fetchRepos from "../../api/services/fetchRepos";
-import { updateReposContext } from "../utils/func/reposUtils";
+import {
+  updateReposContext,
+} from "../utils/func/reposUtils";
 
 // Components
 import DataResultsView from "../views/DataResultsView";
@@ -14,6 +16,9 @@ import DataResultsView from "../views/DataResultsView";
 // Context
 import { SearchContext } from "../../api/context/SearchProvider";
 import { ReposContext } from "../../api/context/ReposProvider";
+
+// Toast
+import { toast } from "sonner";
 
 const DataResultsContainer = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,26 +34,47 @@ const DataResultsContainer = () => {
     repositories,
     setRepositories,
     filterByName,
+    setFilterByName,
     filterByLanguage,
+    setFilterByLanguage,
     sortByName,
+    setSortByName,
     setHasNextPage,
     setNextCursor,
     setLanguagesList,
+    resetReposContext
   } = reposContext || {};
-
 
   /**
    * Aux method for fetching the data
    * Set data into context
    */
   const fetchData = useCallback(async () => {
+    if (!query) return;
+
     setIsLoading(true);
     setIsError(false);
-    if (query) {
-      try {
-        const data: FetchReposResult = await fetchRepos(query);
-        // Update reposContext
-        if (setRepositories && setHasNextPage && setNextCursor && setLanguagesList)
+
+    try {
+      const data: FetchReposResult | null = await fetchRepos(query);
+
+      if (
+        setRepositories &&
+        setLanguagesList &&
+        setHasNextPage &&
+        setNextCursor &&
+        setSortByName &&
+        setFilterByName &&
+        setFilterByLanguage && resetReposContext
+      ) {
+        // If user doesn't exist --> reset reposContext
+        if (!data) {
+          resetReposContext();
+
+          toast.error("User doesn't exist!");
+        }
+        // If user exist --> update reposContext
+        else {
           updateReposContext(
             data,
             false,
@@ -57,12 +83,14 @@ const DataResultsContainer = () => {
             setNextCursor,
             setLanguagesList
           );
-      } catch (error) {
-        console.error("Error:", error);
-        setIsError(true);
-      } finally {
-        setIsLoading(false);
+        }
       }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Error when making the request :(")
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
     }
   }, [query]);
 
@@ -73,8 +101,9 @@ const DataResultsContainer = () => {
     fetchData();
   }, [fetchData]);
 
-  // Local data
-  const localRepos: Repo[] | undefined = repositories;
+  // Set data
+  const localRepos: Repo[] | null | undefined = repositories;
+  console.log("localRepos -->", localRepos);
 
   /**
    * Filters the repositories by name or languageg
@@ -111,13 +140,31 @@ const DataResultsContainer = () => {
 
   // Render
   const renderContent = () => {
+    // If isLoading or if no query
     if (isLoading || !query) return null;
 
-    if (isError) return <p>Oops! Something went wrong</p>;
+    // If error
+    if (isError) return (
+      <>
+        <p>Oops! Something went wrong :(</p>
+        <p>Please try again later</p>
+      </>
+    )
 
+    // If user doesn't exist
+    if (!localRepos)
+      return (
+        <>
+          <p>User doesn't exist!</p>
+          <p>Please try again with a valid username</p>
+        </>
+      );
+
+    // If user exist but has 0 repos
     if (!localRepos?.length)
       return <p>This user doesn't have any public repositories yet</p>;
 
+    // If user exist && has repos
     if (sortedRepositories.length)
       return (
         <div className="w-5/6 mx-auto">
@@ -125,6 +172,7 @@ const DataResultsContainer = () => {
         </div>
       );
 
+    // Else
     return null;
   };
 

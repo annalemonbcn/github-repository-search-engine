@@ -16,7 +16,8 @@
     "@nextui-org/tooltip": "^2.0.29",
     "framer-motion": "^10.16.9",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "sonner": "^1.2.4"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

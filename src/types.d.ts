@@ -38,9 +38,17 @@ export type RepositoriesReponseFromAPI = {
       };
     };
   };
-  errors?: [
+};
+
+export type ErrorRepositoriesResponseFromAPI = {
+  data: {
+    user: null
+  }
+  errors: [
     {
       message: string;
+      path: string;
+      type: string;
       locations: [
         {
           line: number;
@@ -48,8 +56,8 @@ export type RepositoriesReponseFromAPI = {
         },
       ];
     },
-  ];
-};
+  ]
+}
 
 type pageInfo = {
   endCursor: string;

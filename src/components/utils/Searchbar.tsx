@@ -1,14 +1,16 @@
 // Hooks
-import React, { useState, useRef, useContext } from 'react'
+import React, { useState, useRef, useContext } from "react";
 
 // Utils
-import ButtonGreen from './buttons/ButtonGreen';
-import ButtonWhite from './buttons/ButtonWhite';
-import SearchIcon from './svg/SearchIcon';
-import CloseIcon from './svg/CloseIcon';
+import ButtonGreen from "./buttons/ButtonGreen";
+import ButtonWhite from "./buttons/ButtonWhite";
+import SearchIcon from "./svg/SearchIcon";
+import CloseIcon from "./svg/CloseIcon";
 
 // Context
-import { SearchContext } from '../../api/context/SearchProvider';
+import { SearchContext } from "../../api/context/SearchProvider";
+import { ReposContext } from "../../api/context/ReposProvider";
+import { resetUser } from "./func/userUtils";
 
 const Searchbar = () => {
   // State
@@ -17,10 +19,8 @@ const Searchbar = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Context
-  const searchContext = useContext(SearchContext);
-  if (!searchContext) return null; 
-  const { setQuery } = searchContext;
-  
+  const { setQuery } = useContext(SearchContext)!;
+  const { resetReposContext } = useContext(ReposContext)!;
 
   /**
    * Set new query into SearchContext.query
@@ -28,10 +28,9 @@ const Searchbar = () => {
   const submitQuery = () => {
     // Get input value
     const newQuery = inputRef.current?.value;
-    // Set query 
+    // Set query
     setQuery(newQuery || "");
-  }
-
+  };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") submitQuery();
@@ -42,9 +41,10 @@ const Searchbar = () => {
   };
 
   const handleReset = () => {
-    if (inputRef.current) inputRef.current.value = ""
+    if (inputRef.current) inputRef.current.value = "";
+    resetReposContext();
+    resetUser;
   };
-
 
   return (
     <div className="w-5/6 mx-auto flex items-center relative searchbar">
@@ -85,6 +85,6 @@ const Searchbar = () => {
       </div>
     </div>
   );
-}
+};
 
-export default Searchbar
+export default Searchbar;

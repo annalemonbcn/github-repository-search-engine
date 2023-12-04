@@ -20,8 +20,8 @@ const ArrowsIcon = () => {
       classNames={{
         base: [
           "bg-white border border-slate-200 rounded-md",
-          "before:bg-white before:border-slate-200"
-        ]
+          "before:bg-white before:border-slate-200",
+        ],
       }}
     >
       <div className="flex flex-col">
@@ -36,19 +36,12 @@ const ArrowsIcon = () => {
   );
 };
 
-
 const FiltersContainer = () => {
-
-  const reposContext = useContext(ReposContext)
-  if(!reposContext) return null
-  const {
-    setSortByName,
-    setFilterByName
-  } = reposContext;
+  const { setSortByName, setFilterByName } = useContext(ReposContext)!;
 
   const handleToggleSortByName = () => {
     setSortByName((prevSort) => !prevSort);
-  }
+  };
 
   return (
     <div className="flex flex-col md:flex-row items-center justify-between filtersContainer">
