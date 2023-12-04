@@ -19,9 +19,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-
-    /* Typedoc */
-    // "normalTypeScriptOptions": "here",
   },
   "typedocOptions": {
     "entryPoints": ["src"],

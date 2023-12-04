@@ -3,8 +3,9 @@ import { Repo, FetchReposResult } from "../../../types";
 
 /**
  * Format date from text
- * @param inputDate --> string ex: 2023-12-04T15:37:37Z
- * @returns Month day year Ex: December 4 2023
+ * @param inputDate --> string
+ * @returns Month day year
+ * @example "2023-12-04T15:37:37Z" -> "December 4 2023"
  */
 export const formatDate = (inputDate: string) => {
   const months = [
@@ -34,7 +35,7 @@ export const formatDate = (inputDate: string) => {
  * @param repositories
  * @returns a sorted array with unique languages
  */
-export const getLanguagesFromRepositoriesArray = (repositories: Repo[]) => {
+export const getLanguagesFromRepositoriesArray = (repositories: Repo[]): string[] => {
   const languages: string[] = [];
 
   repositories.forEach((repo) => {
