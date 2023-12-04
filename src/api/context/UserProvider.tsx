@@ -20,6 +20,9 @@ const UserProvider = (props: UserProviderProps) => {
 
   const [user, setUser] = useState<User | undefined>();
 
+  /**
+   * Reset userContextState
+   */
   const resetUserContext = () => {
     setUser(undefined)
   }

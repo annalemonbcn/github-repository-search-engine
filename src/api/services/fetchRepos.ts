@@ -12,7 +12,13 @@ import { fetchReposQuery } from "../../queries/graphqlQueries";
 /**
  * Fetch repos from GraphQL Github API
  * @param pageParam (optional) -> next endpoint for fetching next data
- * @returns an FetchReposResult type object
+ * @returns a FetchReposResult type object
+ */
+/**
+ * Fetch repos info from GraphQL Github API
+ * @param username --> github user of which we fetch their repositories
+ * @param nextCursor (optional) --> endpoint to make the request to obtain 10 more repositories
+ * @returns if user found --> FetchReposResult type object | if user not found --> null
  */
 const fetchRepos = async (
   username: string,

@@ -25,6 +25,7 @@ const Searchbar = () => {
 
   /**
    * Set new query into SearchContext.query
+   * ! A new query triggers the fetching of user repos and user info
    */
   const submitQuery = () => {
     // Get input value
@@ -33,14 +34,31 @@ const Searchbar = () => {
     setQuery(newQuery || "");
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  /**
+   * Handle enter key to trigger the search
+   * @param event 
+   */
+  const handleEnterKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") submitQuery();
   };
 
+  /**
+   * Handle the inout to check if input is empty in order to reset it
+   * @param event 
+   */
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    if (event.target.value === "") handleReset();
+    if (event.target.value === ""){
+      handleReset();
+    }
   };
 
+  /**
+   * Method for reseting the:
+   * * input
+   * * searchContext.query
+   * * reposContext
+   * * userContext
+   */
   const handleReset = () => {
     // Reset input
     if (inputRef.current) inputRef.current.value = "";
@@ -65,7 +83,7 @@ const Searchbar = () => {
         type="text"
         placeholder="Type / to search"
         ref={inputRef}
-        onKeyDown={handleKeyDown}
+        onKeyDown={handleEnterKeyDown}
         onInput={handleInput}
         onFocus={() => setIsActive(true)}
         onBlur={() => setIsActive(false)}

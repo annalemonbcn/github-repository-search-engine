@@ -13,6 +13,9 @@ const Dropwdown = () => {
   // State
   const [isDropdownOpen, setIsDropwdownOpen] = useState(false);
 
+  /**
+   * Toggle the dropdown for opening or closing the dropdown
+   */
   const toggleDropdown = () => {
     setIsDropwdownOpen((isOpen) => !isOpen);
   };

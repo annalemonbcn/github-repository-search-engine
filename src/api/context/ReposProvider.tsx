@@ -42,6 +42,9 @@ const ReposProvider = (props: ReposProviderProps) => {
   const [filterByName, setFilterByName] = useState<string | null>(null);
   const [filterByLanguage, setFilterByLanguage] = useState<string | null>(null);
 
+  /**
+   * Reset all reposContext state
+   */
   const resetReposContext = () => {
     setRepositories(null)
     setLanguagesList([])

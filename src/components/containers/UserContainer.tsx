@@ -16,6 +16,11 @@ const UserContainer = () => {
   const { query } = useContext(SearchContext)!;
   const { user, setUser, resetUserContext } = useContext(UserContext)!;
 
+  /**
+   * Aux method for fetching the user data
+   * If !data --> reset userContext
+   * If data --> set data into userContext states
+   */
   const fetchData = useCallback(async () => {
     if (!query) return;
 
@@ -39,10 +44,14 @@ const UserContainer = () => {
     }
   }, [query]);
 
+  /**
+   * useEffect for fetching the data everytime the searchContext.query changes
+   */
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
+  // Render
   if (!isLoading && user) {
     return <UserView user={user} />;
   }

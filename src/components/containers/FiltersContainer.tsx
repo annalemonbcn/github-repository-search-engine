@@ -39,6 +39,9 @@ const ArrowsIcon = () => {
 const FiltersContainer = () => {
   const { setSortByName, setFilterByName } = useContext(ReposContext)!;
 
+  /**
+   * Toggle sortByName from reposContext
+   */
   const handleToggleSortByName = () => {
     setSortByName((prevSort) => !prevSort);
   };

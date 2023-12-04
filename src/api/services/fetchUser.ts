@@ -4,6 +4,11 @@ import { User, UserResponseDataFromAPI } from "../../types";
 // Query
 import { fetchUserQuery } from "../../queries/graphqlQueries";
 
+/**
+ * Fetch user info from GraphQL Github API
+ * @param username --> github user of which we fetch their info
+ * @returns user info
+ */
 const fetchUser = async (username: string): Promise<User> => {
   const query = fetchUserQuery(username);
 

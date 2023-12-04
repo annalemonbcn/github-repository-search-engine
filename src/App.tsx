@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 // Func
-import { handleKeyPress } from "./components/utils/func/handleKeyPress";
+import { handleSlashKeyPress } from "./components/utils/func/handleKeyPress";
 
 // Components
 import Header from "./components/Header";
@@ -12,9 +12,9 @@ import { Toaster } from "sonner";
 
 function App() {
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyPress);
+    window.addEventListener("keydown", handleSlashKeyPress);
     return () => {
-      window.removeEventListener("keydown", handleKeyPress);
+      window.removeEventListener("keydown", handleSlashKeyPress);
     };
   }, []);
 

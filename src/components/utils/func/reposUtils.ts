@@ -1,6 +1,11 @@
 // Types
 import { Repo, FetchReposResult } from "../../../types";
 
+/**
+ * Format date from text
+ * @param inputDate --> string ex: 2023-12-04T15:37:37Z
+ * @returns Month day year Ex: December 4 2023
+ */
 export const formatDate = (inputDate: string) => {
   const months = [
     "January",
@@ -24,6 +29,11 @@ export const formatDate = (inputDate: string) => {
   return `${month} ${day} ${year}`;
 }
 
+/**
+ * Iterate the repositories array finding the unique languages values
+ * @param repositories 
+ * @returns a sorted array with unique languages
+ */
 export const getLanguagesFromRepositoriesArray = (repositories: Repo[]) => {
   const languages: string[] = [];
 
@@ -39,6 +49,15 @@ export const getLanguagesFromRepositoriesArray = (repositories: Repo[]) => {
   return languages.sort();
 }
 
+/**
+ * Aux method for updating the reposContext states
+ * @param data 
+ * @param appendData 
+ * @param setRepos 
+ * @param setHasNextPage 
+ * @param setNextCursor 
+ * @param setLanguagesList 
+ */
 export const updateReposContext = (
   data: FetchReposResult,
   appendData: boolean,
@@ -53,6 +72,7 @@ export const updateReposContext = (
 
   // Update repositories
   if (appendData) {
+    // TODO
     setRepos(prevRepos => [...prevRepos, ...repos]);
   } else {
     setRepos(repos);
@@ -67,5 +87,4 @@ export const updateReposContext = (
     ...prevLanguages,
     ...languages.filter(language => !prevLanguages.includes(language))
   ]);
-
 }

@@ -37,8 +37,9 @@ const DataResultsContainer = () => {
   } = useContext(ReposContext)!;
 
   /**
-   * Aux method for fetching the data
-   * Set data into context
+   * Aux method for fetching the user repos
+   * If !data --> resetReposContext and showError
+   * If data --> set data into reposContext states
    */
   const fetchData = useCallback(async () => {
     if (!query) return;
@@ -87,6 +88,7 @@ const DataResultsContainer = () => {
 
   // Set data
   const localRepos: Repo[] | null | undefined = repositories;
+  
   /**
    * Filters the repositories by name or languageg
    * useMemo -> to  prevent the overcalculating of that var

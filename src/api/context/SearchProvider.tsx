@@ -20,6 +20,9 @@ const SearchProvider = (props: SearchProviderProps) => {
   // State
   const [query, setQuery] = useState<string | undefined>(undefined);
 
+  /**
+   * Reset searchContext state
+   */
   const resetQuery = (): void => {
     setQuery("");
   }

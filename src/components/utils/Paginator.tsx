@@ -20,6 +20,9 @@ const Paginator = () => {
   } = useContext(ReposContext)!;
   const { query } = useContext(SearchContext)!;
 
+  /**
+   * Aux method to fetch the next 10 results from GraphqlAPI
+   */
   const fetchNextPage = async () => {
     try {
       if (query) {
@@ -40,19 +43,14 @@ const Paginator = () => {
     }
   };
 
-  return (
-    <>
-      {hasNextPage && (
-        <div
-          onClick={() => {
-            fetchNextPage();
-          }}
-        >
-          <ButtonGray text="Load 10 more" />
-        </div>
-      )}
-    </>
-  );
+  if (hasNextPage) {
+    return (
+      <div onClick={() => { fetchNextPage() }}>
+        <ButtonGray text="Load 10 more" />
+      </div>
+    )
+  }
+  return null;
 };
 
 export default Paginator;
