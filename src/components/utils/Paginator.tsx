@@ -24,14 +24,16 @@ const Paginator = () => {
     try {
       if (query) {
         const data = await fetchRepos(query, nextCursor);
-        updateReposContext(
-          data,
-          true,
-          setRepositories,
-          setHasNextPage,
-          setNextCursor,
-          setLanguagesList
-        );
+        if (data) {
+          updateReposContext(
+            data,
+            true,
+            setRepositories,
+            setHasNextPage,
+            setNextCursor,
+            setLanguagesList
+          );
+        }
       }
     } catch (error) {
       console.error("Error:", error);
