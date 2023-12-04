@@ -18,7 +18,7 @@ const fetchUser = async (username: string): Promise<User> => {
       Authorization: `Bearer ${import.meta.env.VITE_GITHUB_APIKEY}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ query }),
+    body: JSON.stringify({ query })
   });
 
   if (!response.ok) throw new Error("Error while making the request");
