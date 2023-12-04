@@ -1,3 +1,4 @@
+
 import { useContext } from "react";
 
 // Types
@@ -12,6 +13,9 @@ import Paginator from "../utils/Paginator";
 // Context
 import { SearchContext } from "../../api/context/SearchProvider";
 
+/**
+ * prop for the DataResultsView comp
+ */
 interface DataResultsViewProps {
   sortedRepositories: Repo[];
 }

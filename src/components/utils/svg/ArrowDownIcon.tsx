@@ -1,5 +1,6 @@
-import React from "react";
-
+/**
+ * prop for the ArrowDown comp
+ */
 interface ArrowDownProps {
   color?: string
 }

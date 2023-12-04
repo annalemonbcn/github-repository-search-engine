@@ -1,3 +1,6 @@
+/**
+ * prop for the TopicBadge comp
+ */
 interface TopicBadgeProps {
   text: string
   url: string

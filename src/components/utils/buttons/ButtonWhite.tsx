@@ -1,3 +1,6 @@
+/**
+ * prop for the ButtonWhite comp
+ */
 interface ButtonWhiteProps {
   text: string;
   icon?: React.ReactElement;

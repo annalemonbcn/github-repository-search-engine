@@ -1,3 +1,6 @@
+/**
+ * prop for the ButtonGreen comp
+ */
 interface ButtonGreenProps {
   text: string;
   icon?: React.ReactElement;

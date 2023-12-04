@@ -18,7 +18,14 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* Typedoc */
+    // "normalTypeScriptOptions": "here",
+  },
+  "typedocOptions": {
+    "entryPoints": ["src"],
+    "out": "docs"
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

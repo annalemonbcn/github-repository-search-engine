@@ -27,11 +27,11 @@ export const formatDate = (inputDate: string) => {
   const year = date.getFullYear();
 
   return `${month} ${day} ${year}`;
-}
+};
 
 /**
  * Iterate the repositories array finding the unique languages values
- * @param repositories 
+ * @param repositories
  * @returns a sorted array with unique languages
  */
 export const getLanguagesFromRepositoriesArray = (repositories: Repo[]) => {
@@ -39,24 +39,26 @@ export const getLanguagesFromRepositoriesArray = (repositories: Repo[]) => {
 
   repositories.forEach((repo) => {
     if (repo.primaryLanguage && repo.primaryLanguage.name) {
-      const languageExists = languages.find((language) => language === repo.primaryLanguage?.name)
-      if(!languageExists){
-        languages.push(repo.primaryLanguage.name)
+      const languageExists = languages.find(
+        (language) => language === repo.primaryLanguage?.name
+      );
+      if (!languageExists) {
+        languages.push(repo.primaryLanguage.name);
       }
     }
-  })
+  });
 
   return languages.sort();
-}
+};
 
 /**
  * Aux method for updating the reposContext states
- * @param data 
- * @param appendData 
- * @param setRepos 
- * @param setHasNextPage 
- * @param setNextCursor 
- * @param setLanguagesList 
+ * @param data
+ * @param appendData
+ * @param setRepos
+ * @param setHasNextPage
+ * @param setNextCursor
+ * @param setLanguagesList
  */
 export const updateReposContext = (
   data: FetchReposResult,
@@ -65,15 +67,21 @@ export const updateReposContext = (
   setHasNextPage: React.Dispatch<React.SetStateAction<boolean>>,
   setNextCursor: React.Dispatch<React.SetStateAction<string | undefined>>,
   setLanguagesList: React.Dispatch<React.SetStateAction<string[]>>
-
 ) => {
   const { repos, nextCursor, hasNextPage } = data;
-  const languages: string[] = ["All", ...getLanguagesFromRepositoriesArray(repos)];
+  const languages: string[] = [
+    "All",
+    ...getLanguagesFromRepositoriesArray(repos),
+  ];
 
   // Update repositories
   if (appendData) {
-    // TODO
-    setRepos(prevRepos => [...prevRepos, ...repos]);
+    setRepos((prevRepos) => {
+      if (prevRepos === null) {
+        return repos;
+      }
+      return prevRepos.concat(repos);
+    });
   } else {
     setRepos(repos);
   }
@@ -83,8 +91,8 @@ export const updateReposContext = (
   setNextCursor(nextCursor);
 
   // Update languagesList
-  setLanguagesList(prevLanguages => [
+  setLanguagesList((prevLanguages) => [
     ...prevLanguages,
-    ...languages.filter(language => !prevLanguages.includes(language))
+    ...languages.filter((language) => !prevLanguages.includes(language)),
   ]);
-}
+};

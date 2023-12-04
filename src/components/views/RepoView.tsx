@@ -6,7 +6,9 @@ import { formatDate } from "../utils/func/reposUtils";
 import StarIcon from "../utils/svg/StarIcon";
 import TopicBadge from "../utils/buttons/TopicBadge";
 
-
+/**
+ * prop for the RepoView comp
+ */
 interface RepoViewProps {
   repo: Repo;
 }

@@ -1,3 +1,6 @@
+/**
+ * prop for the CloseIcon comp
+ */
 interface CloseIconProps {
   color: string;
   isActive?: string

@@ -1,3 +1,6 @@
+/**
+ * prop for the EmailIcon comp
+ */
 interface EmailIconProps {
   color: string;
 }

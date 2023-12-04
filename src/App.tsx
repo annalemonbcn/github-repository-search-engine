@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 // Func
-import { handleSlashKeyPress } from "./components/utils/func/handleKeyPress";
+import { handleSlashKeyPress } from "./components/utils/func/handleSlashKeyPress";
 
 // Components
 import Header from "./components/Header";

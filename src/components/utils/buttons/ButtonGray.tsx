@@ -1,3 +1,6 @@
+/**
+ * prop for the ButtonGray comp
+ */
 interface ButtonGrayProps {
   text: string;
   icon?: React.ReactElement;

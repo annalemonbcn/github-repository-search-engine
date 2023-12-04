@@ -2,6 +2,9 @@ import { createContext, useState, ReactNode } from "react"
 
 import { User } from "../../types";
 
+/**
+ * props for the searchContext
+ */
 interface UserContextProps {
   user: User | undefined
   setUser: React.Dispatch<React.SetStateAction<User | undefined>>
@@ -12,6 +15,9 @@ export const UserContext = createContext<UserContextProps | undefined>(
   undefined
 );
 
+/**
+ * prop for the UserProvider
+ */
 interface UserProviderProps {
   children: ReactNode;
 }

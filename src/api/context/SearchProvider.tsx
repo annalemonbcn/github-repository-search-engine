@@ -1,6 +1,9 @@
 
 import React, { createContext, useState, ReactNode } from "react";
 
+/**
+ * props for the searchContext
+ */
 interface SearchContextProps {
   query: string | undefined;
   setQuery: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -12,6 +15,9 @@ export const SearchContext = createContext<SearchContextProps | undefined>(
   undefined
 );
 
+/**
+ * prop for the SearchProvider
+ */
 interface SearchProviderProps {
   children: ReactNode;
 }

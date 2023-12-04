@@ -1,3 +1,6 @@
+/**
+ * prop for the SearchIcon comp
+ */
 interface SearchIconProps {
   height: string;
   width: string;

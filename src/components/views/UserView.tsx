@@ -10,6 +10,9 @@ import FollowersIcon from "../utils/svg/FollowersIcon";
 import TwitterIcon from "../utils/svg/TwitterIcon";
 import EmailIcon from "../utils/svg/EmailIcon";
 
+/**
+ * prop for the UserView comp
+ */
 interface UserViewProps {
   user: User | undefined;
 }

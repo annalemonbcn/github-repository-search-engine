@@ -1,3 +1,6 @@
+/**
+ * prop for the TwitterIcon comp
+ */
 interface TwitterIconProps {
   color: string;
 }

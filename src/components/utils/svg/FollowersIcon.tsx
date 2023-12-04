@@ -1,3 +1,6 @@
+/**
+ * prop for the FollowersIcon comp
+ */
 interface FollowersIconProps {
   color : string
 }

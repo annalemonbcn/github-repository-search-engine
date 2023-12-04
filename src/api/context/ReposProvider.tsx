@@ -5,6 +5,9 @@ import { ReactNode, createContext, useState } from "react";
 import { Repo } from "../../types";
 
 
+/**
+ * props for the reposContext
+ */
 interface ReposContextProps {
   repositories: Repo[] | null;
   setRepositories: React.Dispatch<React.SetStateAction<Repo[] | null>>
@@ -28,6 +31,9 @@ export const ReposContext = createContext<ReposContextProps | undefined>(
   undefined
 );
 
+/**
+ * prop for the ReposProvider
+ */
 interface ReposProviderProps {
   children: ReactNode;
 }

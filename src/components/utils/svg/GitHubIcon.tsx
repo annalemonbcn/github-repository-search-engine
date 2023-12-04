@@ -1,3 +1,6 @@
+/**
+ * prop for the GitHubIcon comp
+ */
 interface GitHubIconProps {
   color: string;
 }
