@@ -10,26 +10,28 @@ import { updateReposContext } from "./func/reposUtils";
 
 const Paginator = () => {
   // Repos context
-  const reposContext = useContext(ReposContext);
-  const searchContext = useContext(SearchContext);
+  const {
+    setRepositories,
+    hasNextPage,
+    setHasNextPage,
+    nextCursor,
+    setNextCursor,
+    setLanguagesList,
+  } = useContext(ReposContext)!;
+  const { query } = useContext(SearchContext)!;
 
   const fetchNextPage = async () => {
     try {
-      if (searchContext && searchContext.query) {
-        const data = await fetchRepos(
-          searchContext?.query,
-          reposContext?.nextCursor
+      if (query) {
+        const data = await fetchRepos(query, nextCursor);
+        updateReposContext(
+          data,
+          true,
+          setRepositories,
+          setHasNextPage,
+          setNextCursor,
+          setLanguagesList
         );
-        if (reposContext) {
-          updateReposContext(
-            data,
-            true,
-            reposContext?.setRepositories,
-            reposContext?.setHasNextPage,
-            reposContext?.setNextCursor,
-            reposContext?.setLanguagesList
-          );
-        }
       }
     } catch (error) {
       console.error("Error:", error);
@@ -38,7 +40,7 @@ const Paginator = () => {
 
   return (
     <>
-      {reposContext?.hasNextPage && (
+      {hasNextPage && (
         <div
           onClick={() => {
             fetchNextPage();

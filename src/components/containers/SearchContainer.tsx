@@ -8,13 +8,13 @@ import Searchbar from '../utils/Searchbar';
 
 const SearchContainer = () => {
 
-  const searchContext = useContext(SearchContext);
+  const { query } = useContext(SearchContext)!;
 
   return (
     <div className="w-5/6 lg:w-4/6 mx-auto my-10 searchContainer">
       <div
         className={`introText transition-opacity transition-height ${
-          searchContext?.query
+          query
             ? "opacity-0 h-0"
             : "opacity-100 h-auto"
         }`}

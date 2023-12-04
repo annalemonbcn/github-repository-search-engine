@@ -6,9 +6,7 @@ import { Repo, FetchReposResult } from "../../types";
 
 // Utils
 import fetchRepos from "../../api/services/fetchRepos";
-import {
-  updateReposContext,
-} from "../utils/func/reposUtils";
+import { updateReposContext } from "../utils/func/reposUtils";
 
 // Components
 import DataResultsView from "../views/DataResultsView";
@@ -25,25 +23,18 @@ const DataResultsContainer = () => {
   const [isError, setIsError] = useState<boolean>();
 
   // Contexts
-  const searchContext = useContext(SearchContext);
-  const reposContext = useContext(ReposContext);
-
-  const query = searchContext?.query;
-
+  const { query } = useContext(SearchContext)!;
   const {
     repositories,
     setRepositories,
     filterByName,
-    setFilterByName,
     filterByLanguage,
-    setFilterByLanguage,
     sortByName,
-    setSortByName,
     setHasNextPage,
     setNextCursor,
     setLanguagesList,
-    resetReposContext
-  } = reposContext || {};
+    resetReposContext,
+  } = useContext(ReposContext)!;
 
   /**
    * Aux method for fetching the data
@@ -52,42 +43,35 @@ const DataResultsContainer = () => {
   const fetchData = useCallback(async () => {
     if (!query) return;
 
+    // Reset local state
     setIsLoading(true);
     setIsError(false);
+    
+    // Reset reposContext
+    resetReposContext();
 
     try {
       const data: FetchReposResult | null = await fetchRepos(query);
+      // If user doesn't exist --> reset reposContext
+      if (!data) {
+        resetReposContext();
 
-      if (
-        setRepositories &&
-        setLanguagesList &&
-        setHasNextPage &&
-        setNextCursor &&
-        setSortByName &&
-        setFilterByName &&
-        setFilterByLanguage && resetReposContext
-      ) {
-        // If user doesn't exist --> reset reposContext
-        if (!data) {
-          resetReposContext();
-
-          toast.error("User doesn't exist!");
-        }
-        // If user exist --> update reposContext
-        else {
-          updateReposContext(
-            data,
-            false,
-            setRepositories,
-            setHasNextPage,
-            setNextCursor,
-            setLanguagesList
-          );
-        }
+        toast.error("User doesn't exist!");
+      }
+      // If user exist --> update reposContext
+      else {
+        updateReposContext(
+          data,
+          false,
+          setRepositories,
+          setHasNextPage,
+          setNextCursor,
+          setLanguagesList
+        );
       }
     } catch (error) {
       console.error("Error:", error);
-      toast.error("Error when making the request :(")
+      toast.error("Error when making the request :(");
       setIsError(true);
     } finally {
       setIsLoading(false);
@@ -103,7 +87,7 @@ const DataResultsContainer = () => {
 
   // Set data
   const localRepos: Repo[] | null | undefined = repositories;
-
+  console.log("localRepos -->", localRepos);
   /**
    * Filters the repositories by name or languageg
    * useMemo -> to  prevent the overcalculating of that var
@@ -137,18 +121,22 @@ const DataResultsContainer = () => {
       : filteredRepositories;
   }, [filteredRepositories, sortByName]);
 
+  console.log("sortedRepositories", sortedRepositories);
+  console.log("localRepos", localRepos);
+
   // Render
   const renderContent = () => {
     // If isLoading or if no query
     if (isLoading || !query) return null;
 
     // If error
-    if (isError) return (
-      <>
-        <p>Oops! Something went wrong :(</p>
-        <p>Please try again later</p>
-      </>
-    )
+    if (isError)
+      return (
+        <>
+          <p>Oops! Something went wrong :(</p>
+          <p>Please try again later</p>
+        </>
+      );
 
     // If user doesn't exist
     if (!localRepos)
@@ -159,8 +147,9 @@ const DataResultsContainer = () => {
         </>
       );
 
-    // If user exist but has 0 repos
-    // if (!localRepos?.length) return <p>This user doesn't have any public repositories yet</p>;
+    // If user doesn't have any public repos
+    if (localRepos.length === 0)
+      return <p>This user doesn't have any public repositories yet</p>;
 
     // If user exist && has repos
     if (sortedRepositories)

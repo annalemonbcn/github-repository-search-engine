@@ -5,11 +5,10 @@ import ButtonGray from "./buttons/ButtonGray";
 import ArrowDownIcon from "./svg/ArrowDownIcon";
 import { ReposContext } from "../../api/context/ReposProvider";
 
-
 const Dropwdown = () => {
-
   // Repos context
-  const reposContext = useContext(ReposContext)
+  const { languagesList, filterByLanguage, setFilterByLanguage } =
+    useContext(ReposContext)!;
 
   // State
   const [isDropdownOpen, setIsDropwdownOpen] = useState(false);
@@ -20,13 +19,13 @@ const Dropwdown = () => {
 
   const handleOptionClick = (language: string) => {
     // Set option into state
-    reposContext?.setFilterByLanguage(language);
+    setFilterByLanguage(language);
 
     // Close dropdown
     setIsDropwdownOpen(false);
   };
 
-  const textProp = () => (reposContext?.filterByLanguage !== null ? reposContext?.filterByLanguage : "All");  
+  const textProp = () => (filterByLanguage !== null ? filterByLanguage : "All");
 
   return (
     <div className="w-full md:w-auto mt-4 md:mt-0 relative inline-block text-left">
@@ -37,7 +36,7 @@ const Dropwdown = () => {
       {isDropdownOpen && (
         <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
-            {reposContext?.languagesList?.map((language) => (
+            {languagesList?.map((language) => (
               <button
                 key={language}
                 onClick={() => handleOptionClick(language)}

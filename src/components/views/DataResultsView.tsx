@@ -18,7 +18,7 @@ interface DataResultsViewProps {
 
 const DataResultsView = ({ sortedRepositories }: DataResultsViewProps) => {
   // Search context
-  const searchContext = useContext(SearchContext);
+  const { query } = useContext(SearchContext)!;
 
   return (
     <div className="flex flex-col gap-4">
@@ -27,23 +27,28 @@ const DataResultsView = ({ sortedRepositories }: DataResultsViewProps) => {
           <UserContainer />
         </div>
         <div className="md:w-2/3 flex flex-col gap-4">
-          {!sortedRepositories.length ? (
-            <p>This user doesn't have any public repositories yet</p>
-          ) : (
-            <>
-              <h2 className="text-xl font-semibold">
-                Search results for user {searchContext?.query}
-              </h2>
-              <FiltersContainer />
-              <div className="flex flex-col gap-4">
-                {sortedRepositories.length > 0 &&
-                  sortedRepositories.map((repo, index) => (
-                    <RepoView repo={repo} key={index} />
-                  ))}
+          <h2 className="text-xl font-semibold">
+            Search results for user {query}
+          </h2>
+          <FiltersContainer />
+          <div className="flex flex-col gap-4">
+            {sortedRepositories.length === 0 && (
+              <div className="flex flex-col">
+                <p>
+                  There are no results that match your filter criteria by text.
+                </p>
+                <p>Please enter a different search text</p>
               </div>
-              <Paginator />
-            </>
-          )}
+            )}
+            {sortedRepositories.length > 0 && (
+              <>
+                {sortedRepositories.map((repo, index) => (
+                  <RepoView repo={repo} key={index} />
+                ))}
+                <Paginator />
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
