@@ -10,7 +10,6 @@ import SearchContainer from "./components/containers/SearchContainer";
 import Footer from "./components/Footer";
 
 function App() {
-
   useEffect(() => {
     window.addEventListener("keydown", handleKeyPress);
     return () => {
@@ -19,10 +18,12 @@ function App() {
   }, []);
 
   return (
-    <div className="text-center text-custom-black relative min-h-screen App">
-      <Header />
-      <SearchContainer />
-      <DataResultsContainer />
+    <div className="flex flex-col min-h-screen text-center text-custom-black App">
+      <div className="flex-grow">
+        <Header />
+        <SearchContainer />
+        <DataResultsContainer />
+      </div>
       <Footer />
     </div>
   );

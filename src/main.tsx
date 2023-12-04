@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <NextUIProvider>
     <SearchProvider>
       <ReposProvider>
-        <App />+{" "}
+        <App />
       </ReposProvider>
     </SearchProvider>
   </NextUIProvider>
