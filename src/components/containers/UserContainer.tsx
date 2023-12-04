@@ -16,8 +16,6 @@ const UserContainer = () => {
   const { query } = useContext(SearchContext)!;
   const { user, setUser, resetUserContext } = useContext(UserContext)!;
 
-  console.log("user -->", user);
-
   const fetchData = useCallback(async () => {
     if (!query) return;
 
@@ -25,12 +23,13 @@ const UserContainer = () => {
 
     try {
       const data = await fetchUser(query);
-
-      // If user doesn't exist --> reset reposContext
+      // If user doesn't exist --> reset userContext
       if (!data) {
         resetUserContext();
         toast.error("User doesn't exist");
-      } else {
+      }
+      // If user exist --> set user
+      else {
         setUser(data);
       }
     } catch (error) {

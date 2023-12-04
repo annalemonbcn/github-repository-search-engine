@@ -103,7 +103,6 @@ const DataResultsContainer = () => {
 
   // Set data
   const localRepos: Repo[] | null | undefined = repositories;
-  console.log("localRepos -->", localRepos);
 
   /**
    * Filters the repositories by name or languageg
@@ -161,11 +160,10 @@ const DataResultsContainer = () => {
       );
 
     // If user exist but has 0 repos
-    if (!localRepos?.length)
-      return <p>This user doesn't have any public repositories yet</p>;
+    // if (!localRepos?.length) return <p>This user doesn't have any public repositories yet</p>;
 
     // If user exist && has repos
-    if (sortedRepositories.length)
+    if (sortedRepositories)
       return (
         <div className="w-5/6 mx-auto">
           <DataResultsView sortedRepositories={sortedRepositories} />

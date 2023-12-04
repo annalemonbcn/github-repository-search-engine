@@ -10,7 +10,7 @@ import CloseIcon from "./svg/CloseIcon";
 // Context
 import { SearchContext } from "../../api/context/SearchProvider";
 import { ReposContext } from "../../api/context/ReposProvider";
-import { resetUser } from "./func/userUtils";
+import { UserContext } from "../../api/context/UserProvider";
 
 const Searchbar = () => {
   // State
@@ -19,8 +19,9 @@ const Searchbar = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Context
-  const { setQuery } = useContext(SearchContext)!;
+  const { setQuery, resetQuery } = useContext(SearchContext)!;
   const { resetReposContext } = useContext(ReposContext)!;
+  const { resetUserContext } = useContext(UserContext)!;
 
   /**
    * Set new query into SearchContext.query
@@ -41,9 +42,14 @@ const Searchbar = () => {
   };
 
   const handleReset = () => {
+    // Reset input
     if (inputRef.current) inputRef.current.value = "";
+    // Reset query
+    resetQuery();
+    // Reset reposContext
     resetReposContext();
-    resetUser;
+    // Reset userContext
+    resetUserContext();
   };
 
   return (

@@ -13,7 +13,7 @@ import Paginator from "../utils/Paginator";
 import { SearchContext } from "../../api/context/SearchProvider";
 
 interface DataResultsViewProps {
-  sortedRepositories: Repo[]
+  sortedRepositories: Repo[];
 }
 
 const DataResultsView = ({ sortedRepositories }: DataResultsViewProps) => {
@@ -27,20 +27,23 @@ const DataResultsView = ({ sortedRepositories }: DataResultsViewProps) => {
           <UserContainer />
         </div>
         <div className="md:w-2/3 flex flex-col gap-4">
-          <h2 className="text-xl font-semibold">
-            Search results for user {searchContext?.query}
-          </h2>
-          {/* Filters */}
-          <FiltersContainer />
-          {/* Repositories list */}
-          <div className="flex flex-col gap-4">
-            {sortedRepositories.length > 0 &&
-              sortedRepositories.map((repo, index) => (
-                <RepoView repo={repo} key={index} />
-              ))}
-          </div>
-          {/* Pagination */}
-          <Paginator />
+          {!sortedRepositories.length ? (
+            <p>This user doesn't have any public repositories yet</p>
+          ) : (
+            <>
+              <h2 className="text-xl font-semibold">
+                Search results for user {searchContext?.query}
+              </h2>
+              <FiltersContainer />
+              <div className="flex flex-col gap-4">
+                {sortedRepositories.length > 0 &&
+                  sortedRepositories.map((repo, index) => (
+                    <RepoView repo={repo} key={index} />
+                  ))}
+              </div>
+              <Paginator />
+            </>
+          )}
         </div>
       </div>
     </div>
