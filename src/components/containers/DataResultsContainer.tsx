@@ -87,7 +87,6 @@ const DataResultsContainer = () => {
 
   // Set data
   const localRepos: Repo[] | null | undefined = repositories;
-  console.log("localRepos -->", localRepos);
   /**
    * Filters the repositories by name or languageg
    * useMemo -> to  prevent the overcalculating of that var
@@ -121,9 +120,7 @@ const DataResultsContainer = () => {
       : filteredRepositories;
   }, [filteredRepositories, sortByName]);
 
-  console.log("sortedRepositories", sortedRepositories);
-  console.log("localRepos", localRepos);
-
+  
   // Render
   const renderContent = () => {
     // If isLoading or if no query
