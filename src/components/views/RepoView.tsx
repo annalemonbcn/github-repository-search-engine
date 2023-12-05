@@ -14,6 +14,7 @@ interface RepoViewProps {
 }
 
 const RepoView = ({ repo }: RepoViewProps) => {
+  console.log('repo', repo)
 
   // Props
   const {
@@ -23,6 +24,7 @@ const RepoView = ({ repo }: RepoViewProps) => {
     primaryLanguage,
     stargazerCount,
     updatedAt,
+    url
   } = repo;
 
   // Format date
@@ -31,7 +33,7 @@ const RepoView = ({ repo }: RepoViewProps) => {
   return (
     <div className="flex flex-col items-start gap-1 p-4 border border-custom-black rounded-md repositoryCard">
       <div className="flex items-center gap-2 text-left">
-        <a className="font-semibold hover:text-custom-blue hover:underline" href={`https://github.com/${name}`}>
+        <a className="font-semibold hover:text-custom-blue hover:underline" href={url}>
           {name}
         </a>
       </div>
