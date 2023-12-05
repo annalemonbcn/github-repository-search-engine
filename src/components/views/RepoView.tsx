@@ -14,7 +14,6 @@ interface RepoViewProps {
 }
 
 const RepoView = ({ repo }: RepoViewProps) => {
-  console.log('repo', repo)
 
   // Props
   const {

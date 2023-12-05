@@ -1,5 +1,5 @@
 // Types
-import { Repo, FetchReposResult } from "../../../types";
+import { Repo } from "../../../types";
 
 /**
  * Format date from text
@@ -35,7 +35,9 @@ export const formatDate = (inputDate: string) => {
  * @param repositories
  * @returns a sorted array with unique languages
  */
-export const getLanguagesFromRepositoriesArray = (repositories: Repo[]): string[] => {
+export const getLanguagesFromRepositoriesArray = (
+  repositories: Repo[]
+): string[] => {
   const languages: string[] = [];
 
   repositories.forEach((repo) => {
@@ -62,29 +64,32 @@ export const getLanguagesFromRepositoriesArray = (repositories: Repo[]): string[
  * @param setLanguagesList
  */
 export const updateReposContext = (
-  data: FetchReposResult,
+  repos: Repo[],
   appendData: boolean,
   setRepos: React.Dispatch<React.SetStateAction<Repo[] | null>>,
+  hasNextPage: boolean,
   setHasNextPage: React.Dispatch<React.SetStateAction<boolean>>,
+  nextCursor: string,
   setNextCursor: React.Dispatch<React.SetStateAction<string | undefined>>,
   setLanguagesList: React.Dispatch<React.SetStateAction<string[]>>
 ) => {
-  const { repos, nextCursor, hasNextPage } = data;
   const languages: string[] = [
     "All",
     ...getLanguagesFromRepositoriesArray(repos),
   ];
 
+  const updatedRepos = updateReadmePrimaryLanguage(repos);
+
   // Update repositories
   if (appendData) {
     setRepos((prevRepos) => {
       if (prevRepos === null) {
-        return repos;
+        return updatedRepos;
       }
-      return prevRepos.concat(repos);
+      return prevRepos.concat(updatedRepos);
     });
   } else {
-    setRepos(repos);
+    setRepos(updatedRepos);
   }
 
   // Update hasNextPage and nextCursor
@@ -96,4 +101,25 @@ export const updateReposContext = (
     ...prevLanguages,
     ...languages.filter((language) => !prevLanguages.includes(language)),
   ]);
+};
+
+/**
+ * Aux function to search for the repos with no primaryLanguage informed
+ * and assign them a "Readme" value
+ * @description we are assuming that the no informed primary language repo is the Readme repository
+ * @param data -> repositories from the response from api
+ * @returns repositories from the response with the primaryLanguage === "" value changed
+ */
+const updateReadmePrimaryLanguage = (data: Repo[]) => {
+  return data.map((repo) => {
+    if (!repo.primaryLanguage?.name) {
+      return {
+        ...repo,
+        primaryLanguage: {
+          name: "Readme",
+        },
+      };
+    }
+    return repo;
+  });
 };

@@ -2,10 +2,10 @@
 import { useState, useEffect, useMemo, useContext, useCallback } from "react";
 
 // Types
-import { Repo, FetchReposResult } from "../../types";
+import { Repo, User } from "../../types";
 
 // Utils
-import fetchRepos from "../../api/services/fetchRepos";
+import fetchUserAndRepos from "../../api/services/fetchData";
 import { updateReposContext } from "../utils/func/reposUtils";
 
 // Components
@@ -17,6 +17,8 @@ import { ReposContext } from "../../api/context/ReposProvider";
 
 // Toast
 import { toast } from "sonner";
+import { UserContext } from "../../api/context/UserProvider";
+
 
 const DataResultsContainer = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,6 +26,7 @@ const DataResultsContainer = () => {
 
   // Contexts
   const { query } = useContext(SearchContext)!;
+  const { setUser, resetUserContext } = useContext(UserContext)!
   const {
     repositories,
     setRepositories,
@@ -50,25 +53,32 @@ const DataResultsContainer = () => {
     
     // Reset reposContext
     resetReposContext();
-
+    
     try {
-      const data: FetchReposResult | null = await fetchRepos(query);
-      // If user doesn't exist --> reset reposContext
+      const data: User | null = await fetchUserAndRepos(query);
+
+      // If user doesn't exist --> reset contexts
       if (!data) {
         resetReposContext();
+        resetUserContext();
 
         toast.error("User doesn't exist!");
       }
-      // If user exist --> update reposContext
+      // If data
       else {
+        // Update reposContext
         updateReposContext(
-          data,
+          data.repositories.nodes,
           false,
           setRepositories,
+          data.repositories.pageInfo.hasNextPage,
           setHasNextPage,
+          data.repositories.pageInfo.endCursor,
           setNextCursor,
           setLanguagesList
         );
+        // Update userContext
+        setUser(data)
       }
     } catch (error) {
       console.error("Error:", error);
