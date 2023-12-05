@@ -1,58 +1,16 @@
 // Hooks
-import { useContext, useEffect, useState, useCallback } from "react";
-
-// Fetching
-import fetchUser from "../../api/services/fetchUser";
+import { useContext } from "react";
 
 // Components
 import UserView from "../views/UserView";
-import { SearchContext } from "../../api/context/SearchProvider";
 import { UserContext } from "../../api/context/UserProvider";
-import { toast } from "sonner";
 
 const UserContainer = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { query } = useContext(SearchContext)!;
-  const { user, setUser, resetUserContext } = useContext(UserContext)!;
-
-  /**
-   * Aux method for fetching the user data
-   * If !data --> reset userContext
-   * If data --> set data into userContext states
-   */
-  const fetchData = useCallback(async () => {
-    if (!query) return;
-
-    setIsLoading(true);
-
-    try {
-      const data = await fetchUser(query);
-      // If user doesn't exist --> reset userContext
-      if (!data) {
-        resetUserContext();
-        toast.error("User doesn't exist");
-      }
-      // If user exist --> set user
-      else {
-        setUser(data);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [query]);
-
-  /**
-   * useEffect for fetching the data everytime the searchContext.query changes
-   */
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+  const { user } = useContext(UserContext)!;
 
   // Render
-  if (!isLoading && user) {
+  if (user) {
     return <UserView user={user} />;
   }
   return <div>Cargando...</div>;
